@@ -1,14 +1,18 @@
-import React from 'react';
+import React, {useState} from 'react';
 import '../styles/Card.scss';
 
 interface Props {
-    word: string
+    word: string,
+    role: string,
+    index: number,
+    onClick: () => void
 }
 
-const Card = ({word}: Props) => {
+const Card = ({word, index, role, onClick}: Props) => {
+
     return (
-        <div className="card-wrapper">
-            <span>{word}</span>
+        <div className={`card-wrapper ${role}`} onClick={onClick}>
+            <span>{word} - {role}</span>
         </div>
     );
 }

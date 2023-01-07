@@ -1,25 +1,33 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
+import { io, Socket } from "socket.io-client";
 import './styles/App.scss';
 import Card from "./components/Card";
-import Word from "./types/Word";
+import ServerToClientEvents from "./types/ServerToClientEvents";
+import ClientToServerEvents from "./types/ClientToServerEvents";
 
 const App = () => {
     const [words, setWords] = useState<Array<string>>([]);
+    const [roles, setRoles] = useState<Array<string>>([]);
+
+    const socketRef = useRef<Socket<ClientToServerEvents, ServerToClientEvents>>();
 
     useEffect(() => {
-        const getWords = async () => {
-            const data = await fetch('http://localhost:8000/words').then(res => res.json());
-            console.log('data', data)
-            setWords(data.words);
-        }
+        socketRef.current = io();
 
-        getWords();
+        socketRef.current.on('words', (words) => {
+            setWords(words);
+        });
+        socketRef.current.on('roles', (roles) => {
+            setRoles(roles);
+        });
     }, []);
 
-  return (
-    <div className="App">
-        {words.length ? words.map((word:string) => (
-            <Card word={word} />
+    return (
+    <div className="board">
+        {words.length ? words.map((word:string, index: number) => (
+            <Card word={word} key={word} onClick={() => {
+                socketRef.current?.emit('checkCardTeam', index);
+            }} index={index} role={roles[index]} />
         )) : <span>Loading...</span>}
     </div>
   );
