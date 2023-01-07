@@ -22,7 +22,7 @@ class Game {
     }
 }
 
-let game = new Game(['Test1', 'Test2', 'Test3', 'Test4', 'Test5'], ['red', 'blue', 'black', 'natural', 'red']);
+let game = new Game(['Test1', 'Test2', 'Test3', 'Test4', 'Test5'], ['red', 'blue', 'black', 'neutral', 'red']);
 
 io.on('connection', (socket:any) => {
     socket.emit("words", game.words);
@@ -30,11 +30,11 @@ io.on('connection', (socket:any) => {
     socket.on("checkCardTeam", (index: number) => {
         console.log(`Card ${index} is `, game.wordsRoles[index]);
         game.currentState[index] = game.wordsRoles[index];
-        io.emit("roles", game.currentState);
+        socket.broadcast.emit("roles", game.currentState);
     });
     socket.on("disconnect", () => {
         console.log('disconnected')
-        game = new Game(['Test1', 'Test2', 'Test3', 'Test4', 'Test5'], ['red', 'blue', 'black', 'natural', 'red']);
+        game = new Game(['Test1', 'Test2', 'Test3', 'Test4', 'Test5'], ['red', 'blue', 'black', 'neutral', 'red']);
     })
 });
 
