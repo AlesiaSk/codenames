@@ -30,7 +30,7 @@ io.on('connection', (socket:any) => {
     socket.on("checkCardTeam", (index: number) => {
         console.log(`Card ${index} is `, game.wordsRoles[index]);
         game.currentState[index] = game.wordsRoles[index];
-        socket.broadcast.emit("roles", game.currentState);
+        io.emit("roles", game.currentState);
     });
     socket.on("disconnect", () => {
         console.log('disconnected')
