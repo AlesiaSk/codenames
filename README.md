@@ -1,5 +1,4 @@
 # codenames
-Codenames game
 
 <div align="center">
   <h3>Codenames</h3>
