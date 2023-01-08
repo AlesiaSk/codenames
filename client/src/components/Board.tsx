@@ -1,29 +1,30 @@
 import React, {useEffect, useState} from 'react';
-import { Socket} from "socket.io-client";
+import {io, Socket} from "socket.io-client";
 import ClientToServerEvents from "../types/ClientToServerEvents";
 import ServerToClientEvents from "../types/ServerToClientEvents";
 import Card from "./Card";
 
-interface Props {
-    socket: Socket<ClientToServerEvents, ServerToClientEvents>
-}
-
-const Board = ({socket}: Props) => {
+const Board = () => {
     const [words, setWords] = useState<Array<string>>([]);
     const [roles, setRoles] = useState<Array<string>>([]);
+    const [socket, setSocket] = useState<Socket<ClientToServerEvents, ServerToClientEvents>>();
 
     useEffect(() => {
-        socket.on('words', (words) => {
-            setWords(words);
-        });
-        socket.on('roles', (roles) => {
-            setRoles(roles);
-        });
+        const s = io();
+        setSocket(s);
+        if(s) {
+            s.on('words', (words) => {
+                setWords(words);
+            });
+            s.on('roles', (roles) => {
+                setRoles(roles);
+            });
+        }
     }, []);
 
     return (
         <div className="board">
-            {words.length ? words.map((word:string, index: number) => (
+            {socket && words.length ? words.map((word:string, index: number) => (
                 <Card word={word} key={word} onClick={() => {
                     socket.emit('checkCardTeam', index);
                 }} index={index} role={roles[index]} />
