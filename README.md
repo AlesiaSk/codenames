@@ -1,7 +1,8 @@
 # codenames
 
 <div align="center">
-  <h3>Codenames</h3>
+  <h1>Codenames</h1>
+  <p>Project is in development</p>
   <p>
       A realtime multiplayer game
   </p>
