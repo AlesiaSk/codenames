@@ -1,6 +1,9 @@
 import express from 'express';
+import { Request, Response } from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import { v4 as uuidv4 } from 'uuid';
+import cors from 'cors';
 
 const app = express();
 const server = createServer(app);
@@ -9,6 +12,8 @@ const io = new Server(server, {
         origin: '*'
     }
 });
+
+app.use(cors());
 
 class Game {
     public words: Array<string>;
@@ -23,6 +28,10 @@ class Game {
 }
 
 let game = new Game(['Test1', 'Test2', 'Test3', 'Test4', 'Test5'], ['red', 'blue', 'black', 'neutral', 'red']);
+
+app.get('/roomId', (req: Request, res: Response) => {
+    res.json( {id: uuidv4()});
+});
 
 io.on('connection', (socket:any) => {
     socket.emit("words", game.words);
