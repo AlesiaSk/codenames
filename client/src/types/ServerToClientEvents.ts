@@ -1,5 +1,9 @@
+interface Room {
+    name?: string,
+    index: number
+}
 interface ServerToClientEvents {
-    checkCardTeam: (index: number) => void;
+    checkCardTeam: (room: string | undefined, index: number) => void;
 }
 
 export default ServerToClientEvents
