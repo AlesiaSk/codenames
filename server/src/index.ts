@@ -50,11 +50,18 @@ class Game {
     }
 }
 
+const rooms = new Map();
+
 app.get('/roomId', (req: Request, res: Response) => {
-    res.json( {id: uuidv4()});
+    const id = uuidv4();
+    res.json( {id});
+    createRoom(id);
 });
 
-let game = new Game(['Test1', 'Test2', 'Test3', 'Test4', 'Test5'], ['red', 'blue', 'black', 'neutral', 'red']);
+const createRoom = (id: string) => {
+    const game = new Game(['Test1', 'Test2', 'Test3', 'Test4', 'Test5'], ['red', 'blue', 'black', 'neutral', 'red']);
+    rooms.set(id, game);
+};
 
 io.on('connection', (socket:any) => {
     console.log(`user ${socket.id} has connected`);
@@ -62,11 +69,10 @@ io.on('connection', (socket:any) => {
     socket.on("join_room", ({ room, name }: Props) => {
         try {
             socket.join(room);
-            console.log('joined')
+            console.log('joined room', room);
             socket.nickname = name;
             socket.room = room;
-            const roomGame = new Game(['Test1', 'Test2', 'Test3', 'Test4', 'Test5'], ['red', 'blue', 'black', 'neutral', 'red']);
-            games[room] = roomGame;
+            games[room] = rooms.get(room);
             if (!sockets[room]) {
                 sockets[room] = {};
                 sockets[room].names = [];
@@ -105,7 +111,7 @@ io.on('connection', (socket:any) => {
     });
     socket.on("disconnect", () => {
         console.log('disconnected')
-        game = new Game(['Test1', 'Test2', 'Test3', 'Test4', 'Test5'], ['red', 'blue', 'black', 'neutral', 'red']);
+        // game = new Game(['Test1', 'Test2', 'Test3', 'Test4', 'Test5'], ['red', 'blue', 'black', 'neutral', 'red']);
     })
 });
 
