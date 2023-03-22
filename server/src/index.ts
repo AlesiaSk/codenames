@@ -37,16 +37,23 @@ const sockets:socketsProps = {};
 const games: gamesProps = {};
 
 app.use(cors());
+app.use(express.json()) // for parsing application/json
+app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 class Game {
     public words: Array<string>;
     public wordsRoles: Array<string>;
     public currentState: Array<string>;
+    public spymasters: Array<string>;
 
     constructor(words: Array<string>, wordsRoles: Array<string>) {
         this.wordsRoles = wordsRoles;
         this.words = words;
         this.currentState = new Array(5).fill('none');
+    };
+
+    setSpymaster(id: string) {
+        this.spymasters.push(id);
     }
 }
 
@@ -56,6 +63,12 @@ app.get('/roomId', (req: Request, res: Response) => {
     const id = uuidv4();
     res.json( {id});
     createRoom(id);
+});
+
+app.post('/setRole', (req: Request, res: Response) => {
+    const data =  req.body;
+    console.log('req.body', data)
+    res.send('OK');
 });
 
 const createRoom = (id: string) => {
@@ -70,6 +83,7 @@ io.on('connection', (socket:any) => {
         try {
             socket.join(room);
             console.log('joined room', room);
+            console.log('name', socket.id);
             socket.nickname = name;
             socket.room = room;
             games[room] = rooms.get(room);
