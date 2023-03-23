@@ -40,20 +40,41 @@ app.use(cors());
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
+class Player {
+    public nickname: string;
+    public id: string;
+    public role: string;
+    public team: string;
+
+    constructor(nickname: string, role: string, team: string) {
+        this.nickname = nickname;
+        this.role = role;
+        this.team = team;
+    };
+}
+
 class Game {
     public words: Array<string>;
     public wordsRoles: Array<string>;
     public currentState: Array<string>;
     public spymasters: Array<string>;
+    public players: Array<Player>;
+    public isStarted: Boolean;
 
     constructor(words: Array<string>, wordsRoles: Array<string>) {
         this.wordsRoles = wordsRoles;
         this.words = words;
         this.currentState = new Array(5).fill('none');
+        this.players = [];
+        this.spymasters = [];
     };
 
     setSpymaster(id: string) {
         this.spymasters.push(id);
+    };
+
+    addPlayer(player: Player) {
+        this.players.push(player);
     }
 }
 
@@ -65,9 +86,13 @@ app.get('/roomId', (req: Request, res: Response) => {
     createRoom(id);
 });
 
-app.post('/setRole', (req: Request, res: Response) => {
-    const data =  req.body;
-    console.log('req.body', data)
+app.post('/setPlayer', (req: Request, res: Response) => {
+    const {nickname, role, team, roomId} =  req.body;
+    console.log('rooms', rooms)
+    const room = rooms.get(roomId);
+    const player = new Player(nickname, role, team);
+    room.addPlayer(player);
+    console.log('room', room)
     res.send('OK');
 });
 
@@ -110,6 +135,9 @@ io.on('connection', (socket:any) => {
             console.log(err.message);
         }
     });
+    socket.on("isSpymasterRoleAvailable", (room: string, team: string) => {
+        games[room].spymasters
+    })
     socket.on("checkCardTeam", (room: string, index: number) => {
         try {
             console.log('index', index);
