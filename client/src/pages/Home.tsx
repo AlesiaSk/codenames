@@ -5,7 +5,7 @@ const Home = () => {
     const navigate = useNavigate();
 
     const getRoomId = async () => {
-        const res = await fetch('http://localhost:8000/roomId').then(res => res.json());
+        const res = await fetch('http://localhost:8000/getRoomId').then(res => res.json());
         return res.id;
     }
 

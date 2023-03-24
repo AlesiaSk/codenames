@@ -14,7 +14,7 @@ const Game = () => {
 
     const setRole = async (nickname: string, role: string, team: string) => {
         console.log('roomId', roomId)
-        const res = await fetch('http://localhost:8000/setPlayer', {
+        const res = await fetch('http://localhost:8000/addPlayer', {
             method: "POST",
             mode: "cors",
             cache: "no-cache",

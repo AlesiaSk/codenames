@@ -5,6 +5,14 @@ import { Server } from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
 import cors from 'cors';
 
+import createRoom from "./handlers/createRoom";
+
+import Room from "./types/Room";
+
+import Game from "./models/Game";
+import Player from "./models/Player";
+
+
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
@@ -19,11 +27,7 @@ interface Props {
     index: number
 }
 
-interface Room {
-    room?: string,
-    names?: Array<string>,
-    start?: boolean
-}
+
 
 interface socketsProps {
     [key: string]: Room
@@ -40,53 +44,15 @@ app.use(cors());
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
-class Player {
-    public nickname: string;
-    public id: string;
-    public role: string;
-    public team: string;
-
-    constructor(nickname: string, role: string, team: string) {
-        this.nickname = nickname;
-        this.role = role;
-        this.team = team;
-    };
-}
-
-class Game {
-    public words: Array<string>;
-    public wordsRoles: Array<string>;
-    public currentState: Array<string>;
-    public spymasters: Array<string>;
-    public players: Array<Player>;
-    public isStarted: Boolean;
-
-    constructor(words: Array<string>, wordsRoles: Array<string>) {
-        this.wordsRoles = wordsRoles;
-        this.words = words;
-        this.currentState = new Array(5).fill('none');
-        this.players = [];
-        this.spymasters = [];
-    };
-
-    setSpymaster(id: string) {
-        this.spymasters.push(id);
-    };
-
-    addPlayer(player: Player) {
-        this.players.push(player);
-    }
-}
-
 const rooms = new Map();
 
-app.get('/roomId', (req: Request, res: Response) => {
+app.get('/getRoomId', (req: Request, res: Response) => {
     const id = uuidv4();
     res.json( {id});
-    createRoom(id);
+    rooms.set(id, createRoom());
 });
 
-app.post('/setPlayer', (req: Request, res: Response) => {
+app.post('/addPlayer', (req: Request, res: Response) => {
     const {nickname, role, team, roomId} =  req.body;
     console.log('rooms', rooms)
     const room = rooms.get(roomId);
@@ -95,11 +61,6 @@ app.post('/setPlayer', (req: Request, res: Response) => {
     console.log('room', room)
     res.send('OK');
 });
-
-const createRoom = (id: string) => {
-    const game = new Game(['Test1', 'Test2', 'Test3', 'Test4', 'Test5'], ['red', 'blue', 'black', 'neutral', 'red']);
-    rooms.set(id, game);
-};
 
 io.on('connection', (socket:any) => {
     console.log(`user ${socket.id} has connected`);
