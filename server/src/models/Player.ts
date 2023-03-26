@@ -9,6 +9,10 @@ class Player {
         this.role = role;
         this.team = team;
     };
+
+    addId(id: string) {
+        this.id = id;
+    }
 }
 
 export default Player
