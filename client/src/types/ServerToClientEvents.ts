@@ -3,7 +3,9 @@ interface Room {
     index: number
 }
 interface ServerToClientEvents {
-    checkCardTeam: (room: string | undefined, index: number) => void;
+    nextMove: (index: number) => void;
+    joinRoom: (room: string | undefined, name: string) => void;
+    gameStarted: () => void;
 }
 
 export default ServerToClientEvents
