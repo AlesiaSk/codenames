@@ -1,12 +1,10 @@
 import React from "react";
 import {useNavigate} from "react-router-dom";
+import {GameAPI} from "../api/GameAPI";
 
-// TODO: Rename to createRoom
-async function getRoomId() {
-    //TODO: add Error handler
-    // rename this request to POST /rooms
-    // add api folder
-    const res = await fetch('http://localhost:8000/getRoomId').then(res => res.json());
+// TODO: add ErrorBoundaries
+async function createRoom() {
+    const res = await GameAPI.create();
     return res.id;
 }
 
@@ -15,7 +13,7 @@ const Home = () => {
 
     return (
         <button onClick={async () => {
-            const roomId = await getRoomId();
+            const roomId = await createRoom();
             if(roomId) {
                 navigate(`/${roomId}`);
             }

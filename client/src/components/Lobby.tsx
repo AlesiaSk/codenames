@@ -1,35 +1,16 @@
 import React from "react";
 import {useParams} from "react-router-dom";
 import {socket} from "../socket";
-
-interface UserData {
-    nickname: string,
-    role: string,
-    team: string
-}
+import UserData from "../types/UserData";
+import {GameAPI} from "../api/GameAPI";
 
 function Lobby () {
     const { id: roomId } = useParams();
 
     const addPlayer = async (nickname: string, role: string, team: string) => {
-        // TODO: add env file
-        const res = await fetch('http://localhost:8000/addPlayer', {
-            method: "POST",
-            mode: "cors",
-            cache: "no-cache",
-            credentials: "same-origin",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            redirect: "follow",
-            referrerPolicy: "no-referrer",
-            body: JSON.stringify({nickname, role, team, roomId})
-        }).then(res => res.json());
-
+        await GameAPI.addPlayer({nickname, role, team, roomId});
         socket.emit("joinRoom", roomId, localStorage.nickname);
         socket.emit("startGame");
-
-        return res.id;
     }
 
     return (
@@ -37,8 +18,8 @@ function Lobby () {
             e.preventDefault();
             const form = e.target as HTMLFormElement;
             const formData = new FormData(form);
-            const data =  Object.fromEntries(formData.entries());
-            // @ts-ignore
+            // TODO: find a way how to fix it
+            const data =  JSON.parse(JSON.stringify(Object.fromEntries(formData.entries())));
             const { nickname, role,  team }: UserData = data;
             localStorage.setItem('nickname', nickname);
             await addPlayer(nickname, role, team);

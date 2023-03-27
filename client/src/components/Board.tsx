@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
 import Card from "./Card";
 import {socket} from "../socket";
 
 const Board = () => {
     const [words, setWords] = useState<Array<string>>([]);
     const [roles, setRoles] = useState<Array<string>>([]);
-    const { id: roomId } = useParams();
 
     useEffect(() => {
         function onWordsChange(words: Array<string>) {
@@ -21,6 +19,7 @@ const Board = () => {
         // TODO: remove words socket
         socket.on('words', onWordsChange);
         socket.on('rolesOfWords', onRolesChange);
+        console.log('socket', socket)
 
         return () => {
             socket.off('words', onWordsChange);

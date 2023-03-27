@@ -23,12 +23,6 @@ const io = new Server(server, {
 
 // const rooms = io.of("/").adapter.rooms;
 
-interface Props {
-    room: string,
-    name: string,
-    index: number
-}
-
 interface socketsProps {
     [key: string]: Room
 }
@@ -46,26 +40,24 @@ app.use(express.urlencoded({ extended: true }));
 
 const rooms = new Map();
 
-app.get('/getRoomId', (req: Request, res: Response) => {
+app.post('/room', (req: Request, res: Response) => {
     const id = uuidv4();
     res.json( {id});
     rooms.set(id, createRoom());
+    res.send({success:"true"});
 });
 
 app.post('/addPlayer', (req: Request, res: Response) => {
     const {nickname, role, team, roomId} =  req.body;
-    console.log('rooms', rooms)
     const room = rooms.get(roomId);
     const player = new Player(nickname, role, team);
     room.addPlayer(player);
-
     if(role === 'spymaster') {
       room.addSpymaster(player);
     }
     
     console.log('room', room)
     res.send({success:"true"});
-
 });
 
 io.on('connection', (socket:any) => {
