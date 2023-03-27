@@ -5,13 +5,14 @@ interface Props {
     word: string,
     role: string,
     index: number,
+    highlight: string,
     onClick: () => void
 }
 
-const Card = ({word, index, role, onClick}: Props) => {
+const Card = ({word, index, role, onClick, highlight}: Props) => {
 
     return (
-        <div className={`card-wrapper ${role}`} onClick={onClick}>
+        <div className={`card-wrapper ${role} ${highlight}`} onClick={onClick}>
             <span>{word} - {role}</span>
         </div>
     );
