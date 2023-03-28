@@ -12,7 +12,7 @@ export const GameAPI = {
         }).then(res => res.json());
     },
     addPlayer: function ({nickname, role, team, roomId} : UserData) {
-        return fetch(`${baseURL}/addPlayer`, {
+        return fetch(`${baseURL}/player`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -21,6 +21,6 @@ export const GameAPI = {
         }).then(res => res.json());
     },
     getPlayerRole: function (socketId: string, roomId?: string) {
-        return fetch(`${baseURL}/playerRole/${socketId}?roomId=${roomId}`).then(res => res.json());
+        return fetch(`${baseURL}/player/${socketId}?roomId=${roomId}`).then(res => res.json());
     }
 }

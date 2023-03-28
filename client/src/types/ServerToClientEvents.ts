@@ -1,10 +1,8 @@
-interface Room {
-    name?: string,
-    index: number
-}
+import JoinGameParams from "./JoinGameParams";
+
 interface ServerToClientEvents {
     nextMove: (index: number) => void;
-    joinRoom: (room: string | undefined, name: string) => void;
+    joinRoom: (joinGameParams: JoinGameParams) => void;
     gameStarted: () => void;
 }
 

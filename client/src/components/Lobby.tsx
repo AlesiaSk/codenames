@@ -2,16 +2,23 @@ import React from "react";
 import {useParams} from "react-router-dom";
 import {socket} from "../socket";
 import UserData from "../types/UserData";
-import {GameAPI} from "../api/GameAPI";
+
+const joinGame = (nickname: string, role: string, team: string, gameId?: string) => {
+    const playerId = sessionStorage.getItem(`game:${gameId}`);
+
+    if(playerId) {
+        socket.emit("joinGame", {gameId, playerId, nickname, role, team});
+    } else {
+        socket.emit("joinGame", {gameId, nickname, role, team}, (userId: string) => {
+            sessionStorage.setItem(`game:${gameId}`, userId);
+        });
+    }
+    socket.emit("startGame");
+    console.log('game is started')
+}
 
 function Lobby () {
-    const { id: roomId } = useParams();
-
-    const addPlayer = async (nickname: string, role: string, team: string) => {
-        await GameAPI.addPlayer({nickname, role, team, roomId});
-        socket.emit("joinRoom", roomId, localStorage.nickname);
-        socket.emit("startGame");
-    }
+    const { id: gameId } = useParams();
 
     return (
         <form onSubmit={async (e) => {
@@ -21,8 +28,7 @@ function Lobby () {
             // TODO: find a way how to fix it
             const data =  JSON.parse(JSON.stringify(Object.fromEntries(formData.entries())));
             const { nickname, role,  team }: UserData = data;
-            localStorage.setItem('nickname', nickname);
-            await addPlayer(nickname, role, team);
+            joinGame(nickname, role, team, gameId);
         }}>
             <label>
                 Nickname
