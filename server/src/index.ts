@@ -6,9 +6,10 @@ import { v4 as uuidv4 } from 'uuid';
 import cors from 'cors';
 
 import Game from "./models/Game";
-import Player from "./models/Player";
+import Player, {PlayerId} from "./models/Player";
 
 import JoinGameParams from "./types/JoinGameParams";
+import { PlayerMove } from "./types/Move";
 
 import gameStore from "./InMemoryGameStore";
 
@@ -24,7 +25,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.post('/room', (req: Request, res: Response) => {
+app.post('/game', (req: Request, res: Response) => {
     const id = uuidv4();
     gameStore.add(id, new Game());
     res.send({
@@ -33,65 +34,82 @@ app.post('/room', (req: Request, res: Response) => {
     });
 });
 
+type SocketId = string;
+const socketsStorage = new Map<PlayerId, SocketId>();
 io.on('connection', (socket) => {
     io.to(socket.id).emit("server_id", socket.id);
 
-    socket.on("joinGame", ({gameId, playerId, nickname, role, team}: JoinGameParams, callback) => {
-        socket.join(gameId);
-        socket.data.gameId =
-            gameId;
+    socket.on("joinGame", ({gameId, nickname, role, team}: JoinGameParams, callback) => {
         const game = gameStore.get(gameId);
-        console.log('joinGame')
 
         if(!game) {
-            throw Error('There is no game with provided id');
+            console.log('There is no game with provided id');
+            return;
         }
 
-        if (!playerId) {
-            const id = uuidv4();
-            game.addPlayer(new Player(nickname, role, team, id));
-            callback(id);
-        } else {
-             const player = game.getPlayer(playerId);
+        if (game.isStarted) {
+            console.log('New players can not join when the game is in progress');
+            return;
+        }
 
-             if(!player) {
-                 console.log('There is no player with provided id in the game');
-             }
-         }
-
-
-        // callback({...player});
+        socket.join(gameId);
+        socket.data.gameId = gameId;
+        const id = uuidv4();
+        io.of("/").adapter.rooms.set(id, new Set(socket.id));
+        socketsStorage.set(id, socket.id);
+        game.addPlayer(new Player(nickname, role, team, id));
+        callback(id);
     });
 
     socket.on("startGame", () => {
         const { gameId } = socket.data;
         const game = gameStore.get(gameId);
-        console.log('startGame')
+
         if (!game) {
-            console.log('No room was found');
-        } else {
-            game.start();
-            console.log('gameId', gameId)
-            io.in(gameId).emit("gameStarted", game.isStarted);
-            io.in(gameId).emit("words", game.words);
-            io.in(gameId).emit("currentRolesOfWords", game.currentState);
-            game.spymasters.forEach((spymaster) => {
-                io.in(spymaster.id).emit("rolesOfWords", game.rolesOfWords);
-            });
+            console.log('No game was found');
+            return;
         }
+
+        game.start();
+        game.spymasters.forEach((spymaster) => {
+            const socketId = socketsStorage.get(spymaster.id);
+            if(socketId) {
+                io.in(socketId).emit("rolesOfWords", game.rolesOfWords);
+            }
+        });
+
+        io.in(gameId).emit("nextMove", {
+            isStarted: game.isStarted,
+            words: game.words,
+            currentBoard: game.currentBoard,
+            players: game.players,
+            nextMove: game.nextMove
+        });
     });
 
-    socket.on("nextMove", (index: number) => {
+    socket.on("move", ({ playerId, move }: { playerId: string, move: PlayerMove }) => {
         const { gameId } = socket.data;
         const game = gameStore.get(gameId);
-        console.log('nextMove')
+
         if (!game) {
-            console.log('No room was found');
-        } else {
-            game.nextMove(index);
-            io.in(gameId).emit("rolesOfWords", game.currentState);
+            console.log('No game was found');
+            return;
         }
 
+        if (!game.isMoveValid(playerId, move)) {
+            console.log('Move not valid');
+            return;
+        }
+
+        game.move(playerId, move);
+
+        io.in(gameId).emit("nextMove", {
+            isStarted: game.isStarted,
+            words: game.words,
+            currentBoard: game.currentBoard,
+            players: game.players,
+            nextMove: game.nextMove
+        });
     });
 
     socket.on("disconnect", () => {

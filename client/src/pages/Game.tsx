@@ -1,52 +1,40 @@
 import React, {useEffect, useState} from "react";
 import Board from "../components/Board";
 import Lobby from "../components/Lobby";
+import GameState from "../types/GameState";
+import Player from "../types/Player";
 
 import {socket} from "../socket";
 
 const Game = () => {
-    const [gameIsStarted, setGameIsStarted] = useState(false);
-    const [words, setWords] = useState<Array<string>>([]);
-    const [roles, setRoles] = useState<Array<string>>([]);
-    const [highlightedWords, setHighlightedWords] = useState<Array<string>>([]);
+    const [player, setPlayer] = useState<Player>();
+    const [currentGameState, setCurrentGameState] = useState<GameState>();
+    const [rolesOfWords, setRolesOfWords] = useState<Array<string>>([]);
 
     useEffect(() => {
-        function gameIsStarted (value : boolean) {
-            setGameIsStarted(value);
+        function onNextMove(nextGameState: GameState) {
+            setCurrentGameState(nextGameState);
         }
 
-        function onWordsChange(words: Array<string>) {
-            setWords(words);
+        function onRolesOfWords(roles: Array<string>) {
+            setRolesOfWords(roles);
         }
 
-        //TODO: return only selected role
-        function onRolesChange(roles: Array<string>) {
-            setRoles(roles);
-        }
-
-        function getHighlightedWords(words: Array<string>) {
-            setHighlightedWords(words);
-        }
-
-        socket.on('gameStarted', gameIsStarted);
-        socket.on('words', onWordsChange);
-        socket.on( 'currentRolesOfWords', onRolesChange);
-        socket.on('rolesOfWords', getHighlightedWords);
+        socket.on('nextMove', onNextMove);
+        socket.on('rolesOfWords', onRolesOfWords);
 
         return (() => {
-            socket.off('gameStarted', gameIsStarted);
-            socket.off('words', onWordsChange);
-            socket.off('rolesOfWords',getHighlightedWords);
-            socket.off('currentRolesOfWords', onRolesChange);
+            socket.off('nextMove', onNextMove);
+            socket.off('rolesOfWords', onRolesOfWords);
         });
     }, []);
 
 
     return (
         <>
-            { gameIsStarted ?
-                <Board words={words} highlightedWords={highlightedWords} roles={roles} /> :
-                <Lobby />
+            { (currentGameState && player) ?
+                <Board player={player} currentGameState={currentGameState} rolesOfWords={rolesOfWords} /> :
+                <Lobby onGameJoined={setPlayer} />
             }
         </>
     )

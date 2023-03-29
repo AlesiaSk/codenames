@@ -4,9 +4,9 @@ class Player {
     public nickname: string;
     public id: PlayerId;
     public role: string;
-    public team: string;
+    public team: 'RED' | 'BLUE';
 
-    constructor(nickname: string, role: string, team: string, id: PlayerId) {
+    constructor(nickname: string, role: string, team: 'RED' | 'BLUE', id: PlayerId) {
         this.nickname = nickname;
         this.role = role;
         this.team = team;

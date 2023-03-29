@@ -1,23 +1,13 @@
 import React from "react";
 import {useParams} from "react-router-dom";
 import {socket} from "../socket";
-import UserData from "../types/UserData";
+import Player from "../types/Player";
 
-const joinGame = (nickname: string, role: string, team: string, gameId?: string) => {
-    const playerId = sessionStorage.getItem(`game:${gameId}`);
-
-    if(playerId) {
-        socket.emit("joinGame", {gameId, playerId, nickname, role, team});
-    } else {
-        socket.emit("joinGame", {gameId, nickname, role, team}, (userId: string) => {
-            sessionStorage.setItem(`game:${gameId}`, userId);
-        });
-    }
-    socket.emit("startGame");
-    console.log('game is started')
+interface LobbyProps {
+    onGameJoined: (player: Player) => void
 }
 
-function Lobby () {
+function Lobby ({ onGameJoined }: LobbyProps) {
     const { id: gameId } = useParams();
 
     return (
@@ -25,10 +15,19 @@ function Lobby () {
             e.preventDefault();
             const form = e.target as HTMLFormElement;
             const formData = new FormData(form);
-            // TODO: find a way how to fix it
-            const data =  JSON.parse(JSON.stringify(Object.fromEntries(formData.entries())));
-            const { nickname, role,  team }: UserData = data;
-            joinGame(nickname, role, team, gameId);
+            const data = Object.fromEntries(formData.entries()) as Player;
+            const { nickname, role, team } = data;
+            const playerId = sessionStorage.getItem(`game:${gameId}`);
+
+            if(playerId) {
+                socket.emit("joinGame", {gameId, playerId, nickname, role, team});
+            } else {
+                socket.emit("joinGame", {gameId, nickname, role, team}, (playerId: string) => {
+                    sessionStorage.setItem(`game:${gameId}`, playerId);
+                    onGameJoined({ nickname, role, team, id: playerId });
+                });
+            }
+            socket.emit("startGame");
         }}>
             <label>
                 Nickname
@@ -36,8 +35,8 @@ function Lobby () {
             </label>
             <p>
                 Team:
-                <label><input type="radio" name="team" value="red" /> Red </label>
-                <label><input type="radio" name="team" value="blue" defaultChecked={true} /> Blue </label>
+                <label><input type="radio" name="team" value="RED" /> Red </label>
+                <label><input type="radio" name="team" value="BLUE" defaultChecked={true} /> Blue </label>
             </p>
             <p>
                 Role:
