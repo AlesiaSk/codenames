@@ -10,7 +10,8 @@ import {useNavigate, useParams} from "react-router-dom";
 interface RestoreGameConnectionParams {
     gameState: GameState,
     player: Player,
-    rolesOfWords: Array<string>
+    rolesOfWords: Array<string>,
+    error: string
 }
 
 const Game = () => {
@@ -39,21 +40,30 @@ const Game = () => {
     }, []);
 
     useEffect(() => {
-        if(player) {
+
+        if (player) {
             return;
         }
 
         const playerId = sessionStorage.getItem(`game:${gameId}`);
-
-        if(!gameId) {
-            navigate('/error');
-        }
-
-        socket.emit("restoreGameConnection", {gameId, playerId}, ({gameState, rolesOfWords, player}: RestoreGameConnectionParams) => {
-            setCurrentGameState(gameState);
-            setPlayer(player);
-            setRolesOfWords(rolesOfWords);
+        socket.emit("isGameExists", gameId, ({error}: {error: string | undefined}) => {
+            if (error) {
+                navigate('/error');
+            }
         });
+
+
+        if (playerId) {
+            socket.emit("restoreGameConnection", {gameId, playerId}, ({gameState, rolesOfWords, player, error}: RestoreGameConnectionParams) => {
+                if (error) {
+                    navigate('/error');
+                }
+
+                setCurrentGameState(gameState);
+                setPlayer(player);
+                setRolesOfWords(rolesOfWords);
+            });
+        }
     }, []);
 
 

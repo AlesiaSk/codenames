@@ -118,6 +118,9 @@ io.on('connection', (socket) => {
         console.log('currentGameState')
         if(!game) {
             console.log('There is no game with provided id');
+            callback({
+                error: 'There is no game with provided id'
+            });
             return;
         }
 
@@ -125,10 +128,15 @@ io.on('connection', (socket) => {
 
         if(!player) {
             console.log('There is no such player in provided game');
+            callback({
+                error: 'There is no such player in provided game'
+            });
             return;
         }
 
+        socket.join(gameId);
         socketsStorage.set(playerId, socket.id);
+        socket.data.gameId = gameId;
         callback({
             gameState: {
                 isStarted: game.isStarted,
@@ -139,6 +147,24 @@ io.on('connection', (socket) => {
             },
             player,
             rolesOfWords: player.role === 'spymaster' ? game.rolesOfWords : undefined
+        });
+    });
+
+    socket.on("isGameExists", (gameId: string, callback) => {
+        const game = gameStore.get(gameId);
+
+        console.log('gameId', gameId)
+        console.log('game', game)
+        if(!game) {
+            console.log('There is no game with provided id');
+            callback({
+                error: 'There is no game with provided id'
+            });
+            return;
+        }
+
+        callback({
+            gameId
         });
     });
 
