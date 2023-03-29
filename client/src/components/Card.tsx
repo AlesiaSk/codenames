@@ -4,18 +4,23 @@ import "../styles/Card.scss";
 interface Props {
   word: string;
   role: string;
-  index: number;
-  highlight: string;
   onClick: () => void;
+  disabled: boolean;
+  highlight?: string;
 }
 
-const Card = ({ word, index, role, onClick, highlight }: Props) => {
+const Card = ({ word, role, onClick, highlight, disabled }: Props) => {
   return (
-    <div className={`card-wrapper ${role} ${highlight}`} onClick={onClick}>
+    <button
+      className={`card-wrapper ${role} 
+      ${highlight}`}
+      onClick={onClick}
+      disabled={disabled}
+    >
       <span>
         {word} - {role}
       </span>
-    </div>
+    </button>
   );
 };
 

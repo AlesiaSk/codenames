@@ -158,12 +158,12 @@ io.on("connection", (socket) => {
         },
         player,
         rolesOfWords:
-          player.role === "spymaster" ? game.rolesOfWords : undefined,
+          player.role === "SPYMASTER" ? game.rolesOfWords : undefined,
       });
     }
   );
 
-  socket.on("isGameExists", (gameId: string, callback) => {
+  socket.on("doesGameExist", (gameId: string, callback) => {
     const game = gameStore.get(gameId);
 
     if (!game) {

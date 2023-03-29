@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Board from "../components/Board";
 import Lobby from "../components/Lobby";
+import GameProcessor from "../components/GameProcessor";
 import GameState from "../types/GameState";
 import Player from "../types/Player";
 
@@ -15,11 +15,20 @@ interface RestoreGameConnectionParams {
 }
 
 const Game = () => {
+  const { id: gameId } = useParams();
+  const navigate = useNavigate();
   const [player, setPlayer] = useState<Player>();
   const [currentGameState, setCurrentGameState] = useState<GameState>();
   const [rolesOfWords, setRolesOfWords] = useState<Array<string>>([]);
-  const navigate = useNavigate();
-  const { id: gameId } = useParams();
+  const [playerId, setPlayerId] = useState(() => sessionStorage.getItem(`game:${gameId}`));
+
+  function handleJoinGame(player: Player) {
+    socket.emit("joinGame", { gameId, ...player }, (playerId: string) => {
+      sessionStorage.setItem(`game:${gameId}`, playerId);
+      setPlayer(player);
+      setPlayerId(playerId);
+    });
+  }
 
   useEffect(() => {
     function onGameMove(nextGameState: GameState) {
@@ -33,7 +42,6 @@ const Game = () => {
     socket.on("gameMove", onGameMove);
     socket.on("rolesOfWords", onRolesOfWords);
 
-
     return () => {
       socket.off("gameMove", onGameMove);
       socket.off("rolesOfWords", onRolesOfWords);
@@ -41,19 +49,7 @@ const Game = () => {
   }, []);
 
   useEffect(() => {
-    if (player) {
-      return;
-    }
-
-    socket.emit("isGameExists", gameId, ({ error }: { error: string }) => {
-      if (error) {
-        navigate("/error");
-      }
-    });
-
-    const playerId = sessionStorage.getItem(`game:${gameId}`);
-
-    if (playerId) {
+    if (playerId && !player) {
       socket.emit(
         "restoreGameConnection",
         { gameId, playerId },
@@ -67,37 +63,32 @@ const Game = () => {
             navigate("/error");
           }
 
-          setCurrentGameState(gameState);
           setPlayer(player);
           setRolesOfWords(rolesOfWords);
+
+          if (gameState.isStarted) {
+            setCurrentGameState(gameState);
+          }
         }
       );
     }
-  }, []);
+  }, [gameId, navigate, player, playerId]);
 
-  return (
-    <>
-      {player ? (
-        currentGameState?.isStarted ? (
-          <Board
-            player={player}
-            currentGameState={currentGameState}
-            rolesOfWords={rolesOfWords}
-          />
-        ) : (
-          <button
-            onClick={() => {
-              socket.emit("startGame");
-            }}
-          >
-            Start the game
-          </button>
-        )
-      ) : (
-        <Lobby onGameJoined={setPlayer} />
-      )}
-    </>
-  );
+  if (!playerId) {
+    return <Lobby onJoinGameSubmit={handleJoinGame} />;
+  }
+
+  if (player) {
+    return (<GameProcessor
+      currentGameState={currentGameState}
+      onGameStart={() => socket.emit("startGame")}
+      player={player}
+      playerId={playerId}
+      rolesOfWords={rolesOfWords}
+    />);
+  }
+
+  return <span>Restoring session...</span>;
 };
 
 export default Game;

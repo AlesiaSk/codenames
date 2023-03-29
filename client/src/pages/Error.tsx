@@ -5,8 +5,8 @@ const Error = () => {
   const navigate = useNavigate();
 
   return (
-    <div>
-      <h1>Ooops.. something went wrong</h1>
+    <>
+      <h1>Oops.. something went wrong</h1>
       <button
         onClick={() => {
           navigate("/");
@@ -14,7 +14,7 @@ const Error = () => {
       >
         Try again
       </button>
-    </div>
+    </>
   );
 };
 

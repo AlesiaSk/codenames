@@ -15,7 +15,7 @@ export interface EndGuessingMove {
 }
 
 export interface GameMove {
-  type: "GIVE_CLUE" | "GUESSING" | "GUESS_MORE_OR_END_GUESSING";
+  type: "GIVE_CLUE" | "GUESSING";
   team: "RED" | "BLUE";
 }
 

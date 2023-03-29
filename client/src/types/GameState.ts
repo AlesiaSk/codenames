@@ -5,7 +5,6 @@ interface GameState {
   isStarted: boolean;
   words: Array<string>;
   currentBoard: Array<string>;
-  players: Array<Player>;
   nextMove: GameMove;
 }
 

@@ -1,27 +1,18 @@
 import React from "react";
-import {useParams} from "react-router-dom";
-import {socket} from "../socket";
 import Player from "../types/Player";
 
 interface LobbyProps {
-    onGameJoined: (player: Player) => void
+    onJoinGameSubmit: (player: Player) => void
 }
 
-function Lobby ({ onGameJoined }: LobbyProps) {
-    const { id: gameId } = useParams();
-
+function Lobby ({ onJoinGameSubmit }: LobbyProps) {
     return (
-        <form onSubmit={async (e) => {
+        <form onSubmit={e => {
             e.preventDefault();
             const form = e.target as HTMLFormElement;
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries()) as Player;
-            const { nickname, role, team } = data;
-
-            socket.emit("joinGame", {gameId, nickname, role, team}, (playerId: string) => {
-                sessionStorage.setItem(`game:${gameId}`, playerId);
-                onGameJoined({ nickname, role, team, id: playerId });
-            });
+            onJoinGameSubmit(data);
         }}>
             <label>
                 Nickname
@@ -34,10 +25,10 @@ function Lobby ({ onGameJoined }: LobbyProps) {
             </p>
             <p>
                 Role:
-                <label><input type="radio" name="role" value="spymaster" /> Spymaster </label>
-                <label><input type="radio" name="role" value="operative" defaultChecked={true} /> Operative </label>
+                <label><input type="radio" name="role" value="SPYMASTER" /> Spymaster </label>
+                <label><input type="radio" name="role" value="OPERATIVE" defaultChecked={true} /> Operative </label>
             </p>
-            <button>Join the game</button>
+            <button type="submit">Join the game</button>
         </form>
     )
 }

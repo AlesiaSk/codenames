@@ -30,7 +30,7 @@ class Game {
   addPlayer(player: Player) {
     this.players.set(player.id, player);
 
-    if (player.role === "spymaster") {
+    if (player.role === "SPYMASTER") {
       this.addSpymaster(player);
     }
   }
@@ -39,27 +39,27 @@ class Game {
     return this.players.get(playerId);
   }
 
-  move(playerId: PlayerId, move: PlayerMove) {
+  move(playerId: PlayerId, playerMove: PlayerMove) {
     const player = this.getPlayer(playerId);
 
-    if (!this.isMoveValid(playerId, move) || !player) {
+    if (!this.isMoveValid(playerId, playerMove) || !player) {
       return false;
     }
 
-    if (move.type === "GIVE_CLUE") {
-      this.currentClue = move.clue;
+    if (playerMove.type === "GIVE_CLUE") {
+      this.currentClue = playerMove.clue;
       this.nextMove = { type: "GUESSING", team: player.team };
       return;
     }
 
-    if (move.type === "GUESSING") {
-      this.currentBoard[move.wordIndex] = this.rolesOfWords[move.wordIndex];
-      this.nextMove = { type: "GUESS_MORE_OR_END_GUESSING", team: player.team };
+    if (playerMove.type === "GUESSING") {
+      this.currentBoard[playerMove.wordIndex] =
+        this.rolesOfWords[playerMove.wordIndex];
+      this.nextMove = { type: "GUESSING", team: player.team };
       return;
     }
 
-    if (move.type === "END_GUESSING") {
-      console.log("END_GUESSING");
+    if (playerMove.type === "END_GUESSING") {
       this.nextMove = {
         type: "GIVE_CLUE",
         team: player.team === "RED" ? "BLUE" : "RED",
@@ -72,15 +72,14 @@ class Game {
     this.isStarted = true;
   }
 
-  isMoveValid(playerId: PlayerId, move: PlayerMove) {
+  isMoveValid(playerId: PlayerId, playerMove: PlayerMove) {
     const player = this.getPlayer(playerId);
     return (
       player &&
       this.nextMove.team === player.team &&
-      (this.nextMove.type === move.type ||
-        ((this.nextMove.type === "GUESS_MORE_OR_END_GUESSING" ||
-          this.nextMove.type === "GUESSING") &&
-          move.type === "END_GUESSING"))
+      (this.nextMove.type === playerMove.type ||
+        (this.nextMove.type === "GUESSING" &&
+          playerMove.type === "END_GUESSING"))
     );
   }
 }

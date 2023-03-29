@@ -1,6 +1,6 @@
 import React from "react";
 import Clue from "../types/Clue";
-import { onSpymasterMove } from "../handlers/moveHandlers";
+import { spymasterMove } from "../handlers/moveHandlers";
 
 const ClueForm = ({ playerId }: {playerId: string}) => {
   return (
@@ -9,16 +9,15 @@ const ClueForm = ({ playerId }: {playerId: string}) => {
         event.preventDefault();
         const form = event.target as HTMLFormElement;
         const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries()) as Clue;
-        const { association, numberOfWords } = data;
-        onSpymasterMove(playerId, { association, numberOfWords });
+        const clue = Object.fromEntries(formData.entries()) as Clue;
+        spymasterMove(playerId, clue);
       }}
     >
-      <label htmlFor="association">Association</label>
-      <input name="association" />
-      <label htmlFor="association">Number of words</label>
-      <input name="association" />
-      <button>Give a clue</button>
+      <label htmlFor="association-input">Association</label>
+      <input id="association-input" type="text" />
+      <label htmlFor="number-of-words-input">Number of words</label>
+      <input id="number-of-words-input" type="number" />
+      <button type="submit">Give a clue</button>
     </form>
   );
 };
