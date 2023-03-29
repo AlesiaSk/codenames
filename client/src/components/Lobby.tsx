@@ -17,17 +17,11 @@ function Lobby ({ onGameJoined }: LobbyProps) {
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries()) as Player;
             const { nickname, role, team } = data;
-            const playerId = sessionStorage.getItem(`game:${gameId}`);
 
-            if(playerId) {
-                socket.emit("joinGame", {gameId, playerId, nickname, role, team});
-            } else {
-                socket.emit("joinGame", {gameId, nickname, role, team}, (playerId: string) => {
-                    sessionStorage.setItem(`game:${gameId}`, playerId);
-                    onGameJoined({ nickname, role, team, id: playerId });
-                });
-            }
-            socket.emit("startGame");
+            socket.emit("joinGame", {gameId, nickname, role, team}, (playerId: string) => {
+                sessionStorage.setItem(`game:${gameId}`, playerId);
+                onGameJoined({ nickname, role, team, id: playerId });
+            });
         }}>
             <label>
                 Nickname

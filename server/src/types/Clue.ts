@@ -1,6 +1,6 @@
 interface Clue {
-    association: string,
-    numberOfWords: string
+  association: string;
+  numberOfWords: string;
 }
 
 export default Clue;

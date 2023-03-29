@@ -1,6 +1,6 @@
-interface Word  {
-    value?: string,
-    team?: string
+interface Word {
+  value?: string;
+  team?: string;
 }
 
-export default Word
+export default Word;

@@ -1,5 +1,5 @@
 interface App {
-    onClick: () => void;
+  onClick: () => void;
 }
 
-export default App
+export default App;
