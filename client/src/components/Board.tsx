@@ -18,7 +18,7 @@ const Board = ({currentGameState, rolesOfWords, player}: BoardProps) => {
         <div className="board">
             {words.length ? words.map((word, index) => (
                 <Card word={word} key={word} onClick={() => {
-                    socket.emit('move', index);
+                    socket.emit('playerMove', index);
                 }} index={index} role={currentBoard[index]} highlight={rolesOfWords[index]} />
             )) : <span>Loading...</span>}
         </div>

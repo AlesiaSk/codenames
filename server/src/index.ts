@@ -78,7 +78,7 @@ io.on('connection', (socket) => {
             }
         });
 
-        io.in(gameId).emit("nextMove", {
+        io.in(gameId).emit("gameMove", {
             isStarted: game.isStarted,
             words: game.words,
             currentBoard: game.currentBoard,
@@ -87,7 +87,7 @@ io.on('connection', (socket) => {
         });
     });
 
-    socket.on("move", ({ playerId, move }: { playerId: string, move: PlayerMove }) => {
+    socket.on("playerMove", ({ playerId, move }: { playerId: string, move: PlayerMove }) => {
         const { gameId } = socket.data;
         const game = gameStore.get(gameId);
 
@@ -103,7 +103,7 @@ io.on('connection', (socket) => {
 
         game.move(playerId, move);
 
-        io.in(gameId).emit("nextMove", {
+        io.in(gameId).emit("gameMove", {
             isStarted: game.isStarted,
             words: game.words,
             currentBoard: game.currentBoard,
@@ -112,9 +112,39 @@ io.on('connection', (socket) => {
         });
     });
 
+    socket.on("restoreGameConnection", ({playerId, gameId}: {playerId: PlayerId, gameId: string}, callback) => {
+        const game = gameStore.get(gameId);
+
+        console.log('currentGameState')
+        if(!game) {
+            console.log('There is no game with provided id');
+            return;
+        }
+
+        const player = game.players.get(playerId);
+
+        if(!player) {
+            console.log('There is no such player in provided game');
+            return;
+        }
+
+        socketsStorage.set(playerId, socket.id);
+        callback({
+            gameState: {
+                isStarted: game.isStarted,
+                words: game.words,
+                currentBoard: game.currentBoard,
+                players: game.players,
+                nextMove: game.nextMove,
+            },
+            player,
+            rolesOfWords: player.role === 'spymaster' ? game.rolesOfWords : undefined
+        });
+    });
+
     socket.on("disconnect", () => {
         console.log('disconnected')
-    })
+    });
 });
 
 server.listen(8000);

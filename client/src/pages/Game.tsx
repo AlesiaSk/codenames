@@ -5,14 +5,23 @@ import GameState from "../types/GameState";
 import Player from "../types/Player";
 
 import {socket} from "../socket";
+import {useNavigate, useParams} from "react-router-dom";
+
+interface RestoreGameConnectionParams {
+    gameState: GameState,
+    player: Player,
+    rolesOfWords: Array<string>
+}
 
 const Game = () => {
     const [player, setPlayer] = useState<Player>();
     const [currentGameState, setCurrentGameState] = useState<GameState>();
     const [rolesOfWords, setRolesOfWords] = useState<Array<string>>([]);
+    const navigate = useNavigate();
+    const { id: gameId } = useParams();
 
     useEffect(() => {
-        function onNextMove(nextGameState: GameState) {
+        function onGameMove(nextGameState: GameState) {
             setCurrentGameState(nextGameState);
         }
 
@@ -20,12 +29,30 @@ const Game = () => {
             setRolesOfWords(roles);
         }
 
-        socket.on('nextMove', onNextMove);
+        socket.on('gameMove', onGameMove);
         socket.on('rolesOfWords', onRolesOfWords);
 
         return (() => {
-            socket.off('nextMove', onNextMove);
+            socket.off('gameMove', onGameMove);
             socket.off('rolesOfWords', onRolesOfWords);
+        });
+    }, []);
+
+    useEffect(() => {
+        if(player) {
+            return;
+        }
+
+        const playerId = sessionStorage.getItem(`game:${gameId}`);
+
+        if(!gameId) {
+            navigate('/error');
+        }
+
+        socket.emit("restoreGameConnection", {gameId, playerId}, ({gameState, rolesOfWords, player}: RestoreGameConnectionParams) => {
+            setCurrentGameState(gameState);
+            setPlayer(player);
+            setRolesOfWords(rolesOfWords);
         });
     }, []);
 
