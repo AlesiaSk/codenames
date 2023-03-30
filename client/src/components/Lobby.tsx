@@ -1,5 +1,5 @@
 import React from "react";
-import Player from "../types/Player";
+import Player, {Role} from "../types/Player";
 
 interface LobbyProps {
     onJoinGameSubmit: (player: Player) => void
@@ -16,7 +16,7 @@ function Lobby ({ onJoinGameSubmit }: LobbyProps) {
         }}>
             <label>
                 Nickname
-                <input name="nickname" />
+                <input required name="nickname" maxLength={20} />
             </label>
             <p>
                 Team:
@@ -25,8 +25,8 @@ function Lobby ({ onJoinGameSubmit }: LobbyProps) {
             </p>
             <p>
                 Role:
-                <label><input type="radio" name="role" value="SPYMASTER" /> Spymaster </label>
-                <label><input type="radio" name="role" value="OPERATIVE" defaultChecked={true} /> Operative </label>
+                <label><input type="radio" name="role" value={Role.SPYMASTER} /> Spymaster </label>
+                <label><input type="radio" name="role" value={Role.OPERATIVE} defaultChecked={true} /> Operative </label>
             </p>
             <button type="submit">Join the game</button>
         </form>

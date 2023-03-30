@@ -4,9 +4,9 @@ import Card from "./Card";
 import ClueForm from "./ClueForm";
 
 import GameState from "../types/GameState";
-import Player from "../types/Player";
+import Player, {Role} from "../types/Player";
 
-import {operativeMove, endGuessing} from "../handlers/moveHandlers";
+import {endGuessing, operativeMove} from "../handlers/moveHandlers";
 
 interface BoardProps {
   player: Player;
@@ -21,22 +21,22 @@ const Board = ({ currentGameState, rolesOfWords, player, playerId }: BoardProps)
 
   return (
     <div className="board" data-testid="game-board">
-      <div data-testid="game-words">
+      <div className="cards-wrapper" data-testid="game-words">
         {words.map((word, wordIndex) => (
           <Card
             key={word}
             word={word}
             role={currentBoard[wordIndex]}
             highlight={rolesOfWords[wordIndex]}
-            disabled={!isPlayerTeamMove || nextMove.type !== "GUESSING" || player.role !== "OPERATIVE" }
+            disabled={!isPlayerTeamMove || nextMove.type !== "GUESSING" || player.role !== Role.OPERATIVE }
             onClick={() => operativeMove(playerId, wordIndex)}
           />
         ))}
       </div>
       {isPlayerTeamMove && (
         <>
-          {nextMove.type === "GIVE_CLUE" && player.role === "SPYMASTER" && <ClueForm playerId={playerId} />}
-          {nextMove.type === "GUESSING" && player.role === "OPERATIVE" && (
+          {nextMove.type === "GIVE_CLUE" && player.role === Role.SPYMASTER && <ClueForm playerId={playerId} />}
+          {nextMove.type === "GUESSING" && player.role === Role.OPERATIVE && (
             <button type="button" onClick={() => endGuessing(playerId)}>End guessing</button>
           )}
         </>

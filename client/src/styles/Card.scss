@@ -28,3 +28,9 @@
     background-color: #e7cc6a;
   }
 }
+
+.cards-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  gap: 20px;
+}
