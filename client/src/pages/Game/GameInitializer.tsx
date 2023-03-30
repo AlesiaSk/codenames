@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Lobby from "../../components/Lobby";
-import GameProcessor from "./GameProcess";
+import GameProcess from "./GameProcess";
 import GameState from "../../types/GameState";
 import Player from "../../types/Player";
 
@@ -79,7 +79,7 @@ const GameInitializer = () => {
   }
 
   if (player) {
-    return (<GameProcessor
+    return (<GameProcess
       currentGameState={currentGameState}
       onGameStart={() => socket.emit("startGame")}
       player={player}

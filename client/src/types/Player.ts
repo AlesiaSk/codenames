@@ -1,8 +1,18 @@
+export enum Role {
+  OPERATIVE = "OPERATIVE",
+  SPYMASTER = "SPYMASTER"
+}
+
+export enum Team {
+  RED = "RED",
+  BLUE = "BLUE"
+}
+
 type Player = {
   nickname: string;
   id: string;
-  role: "SPYMASTER" | "OPERATIVE";
-  team: "RED" | "BLUE";
+  role: Role;
+  team: Team;
 };
 
 export default Player;

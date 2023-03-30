@@ -1,22 +1,34 @@
 import Clue from "./Clue";
+import {Team} from "./Player";
+
+export enum PlayerMoveType {
+  GUESSING = "GUESSING",
+  END_GUESSING = "END_GUESSING",
+  GIVE_CLUE = "GIVE_CLUE"
+}
+
+export enum GameMoveType {
+  GIVE_CLUE = "GIVE_CLUE",
+  GUESSING = "GUESSING"
+}
 
 export interface GiveClueMove {
-  type: "GIVE_CLUE";
+  type: PlayerMoveType.GIVE_CLUE;
   clue: Clue;
 }
 
 export interface GuessingMove {
-  type: "GUESSING";
+  type: PlayerMoveType.GUESSING;
   wordIndex: number;
 }
 
 export interface EndGuessingMove {
-  type: "END_GUESSING";
+  type: PlayerMoveType.END_GUESSING;
 }
 
 export interface GameMove {
-  type: "GIVE_CLUE" | "GUESSING";
-  team: "RED" | "BLUE";
+  type: GameMoveType;
+  team: Team;
 }
 
 export type PlayerMove = GiveClueMove | GuessingMove | EndGuessingMove;

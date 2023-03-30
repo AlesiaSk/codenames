@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/Card.scss";
+import classNames from "classnames";
 
 interface Props {
   word: string;
@@ -12,8 +13,9 @@ interface Props {
 const Card = ({ word, role, onClick, highlight, disabled }: Props) => {
   return (
     <button
-      className={`card-wrapper ${role} 
-      ${highlight}`}
+      className="card"
+      data-role={role}
+      data-highlight={highlight}
       onClick={onClick}
       disabled={disabled}
     >
