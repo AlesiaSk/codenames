@@ -1,7 +1,7 @@
 import React from "react";
-import Board from "./Board";
-import Player from "../types/Player";
-import GameState from "../types/GameState";
+import Board from "../../components/Board";
+import Player from "../../types/Player";
+import GameState from "../../types/GameState";
 
 interface GameProcessorProps {
   onGameStart: () => void,
@@ -11,7 +11,7 @@ interface GameProcessorProps {
   currentGameState?: GameState;
 }
 
-function GameProcessor({ currentGameState, player, rolesOfWords, playerId, onGameStart}: GameProcessorProps) {
+function GameProcess({ currentGameState, player, rolesOfWords, playerId, onGameStart}: GameProcessorProps) {
   if (!currentGameState) {
     return (<button type="button" onClick={onGameStart}>
       Start the game
@@ -28,4 +28,4 @@ function GameProcessor({ currentGameState, player, rolesOfWords, playerId, onGam
   )
 }
 
-export default GameProcessor;
+export default GameProcess;

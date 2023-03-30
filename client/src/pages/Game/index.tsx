@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {socket} from "../socket";
+import {socket} from "../../socket";
 import {useNavigate, useParams} from "react-router-dom";
-import Game from "./Game";
+import GameInitializer from "./GameInitializer";
 
-function GameHandler() {
+function Game() {
   const { id: gameId } = useParams();
   const navigate = useNavigate();
   const [doesGameExist, setDoesGameExist] = useState(false);
@@ -22,7 +22,7 @@ function GameHandler() {
     return <span>Loading...</span>;
   }
 
-  return <Game />;
+  return <GameInitializer />;
 }
 
-export default GameHandler;
+export default Game;

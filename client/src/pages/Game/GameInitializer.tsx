@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import Lobby from "../components/Lobby";
-import GameProcessor from "../components/GameProcessor";
-import GameState from "../types/GameState";
-import Player from "../types/Player";
+import Lobby from "../../components/Lobby";
+import GameProcessor from "./GameProcess";
+import GameState from "../../types/GameState";
+import Player from "../../types/Player";
 
-import { socket } from "../socket";
+import { socket } from "../../socket";
 import { useNavigate, useParams } from "react-router-dom";
 
 interface RestoreGameConnectionParams {
@@ -14,7 +14,7 @@ interface RestoreGameConnectionParams {
   error: string;
 }
 
-const Game = () => {
+const GameInitializer = () => {
   const { id: gameId } = useParams();
   const navigate = useNavigate();
   const [player, setPlayer] = useState<Player>();
@@ -91,4 +91,4 @@ const Game = () => {
   return <span>Restoring session...</span>;
 };
 
-export default Game;
+export default GameInitializer;
