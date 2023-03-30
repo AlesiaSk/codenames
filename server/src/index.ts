@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import cors from "cors";
 
 import Game from "./models/Game";
-import Player, { PlayerId } from "./models/Player";
+import Player, { PlayerId, Role } from "./models/Player";
 
 import JoinGameParams from "./types/JoinGameParams";
 import { PlayerMove } from "./types/Move";
@@ -102,7 +102,7 @@ io.on("connection", (socket) => {
       }
 
       if (!game.isMoveValid(playerId, move)) {
-        console.log("Move not valid");
+        console.log("Move is not valid");
         return;
       }
 
@@ -126,7 +126,6 @@ io.on("connection", (socket) => {
     ) => {
       const game = gameStore.get(gameId);
 
-      console.log("currentGameState");
       if (!game) {
         console.log("There is no game with provided id");
         callback({
@@ -158,7 +157,7 @@ io.on("connection", (socket) => {
         },
         player,
         rolesOfWords:
-          player.role === "SPYMASTER" ? game.rolesOfWords : undefined,
+          player.role === Role.SPYMASTER ? game.rolesOfWords : undefined,
       });
     }
   );
@@ -167,7 +166,6 @@ io.on("connection", (socket) => {
     const game = gameStore.get(gameId);
 
     if (!game) {
-      console.log("There is no game with provided id");
       callback({
         error: "There is no game with provided id",
       });

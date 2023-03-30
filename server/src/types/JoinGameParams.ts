@@ -1,7 +1,9 @@
+import { Role, Team } from "../models/Player";
+
 interface JoinGameParams {
   gameId: string;
   nickname: string;
-  role: string;
-  team: "RED" | "BLUE";
+  role: Role;
+  team: Team;
 }
 export default JoinGameParams;

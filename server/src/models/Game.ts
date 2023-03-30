@@ -1,5 +1,5 @@
-import Player, { PlayerId } from "./Player";
-import { GameMove, PlayerMove } from "../types/Move";
+import Player, {PlayerId, Role, Team} from "./Player";
+import {GameMove, PlayerMove} from "../types/Move";
 import Clue from "../types/Clue";
 
 class Game {
@@ -20,7 +20,7 @@ class Game {
     this.players = new Map<PlayerId, Player>();
     this.spymasters = new Map<PlayerId, Player>();
     this.isStarted = false;
-    this.nextMove = { type: "GIVE_CLUE", team: "RED" };
+    this.nextMove = { type: "GIVE_CLUE", team: Team.RED };
   }
 
   private addSpymaster(player: Player) {
@@ -30,7 +30,7 @@ class Game {
   addPlayer(player: Player) {
     this.players.set(player.id, player);
 
-    if (player.role === "SPYMASTER") {
+    if (player.role === Role.SPYMASTER) {
       this.addSpymaster(player);
     }
   }
@@ -62,7 +62,7 @@ class Game {
     if (playerMove.type === "END_GUESSING") {
       this.nextMove = {
         type: "GIVE_CLUE",
-        team: player.team === "RED" ? "BLUE" : "RED",
+        team: player.team === Team.RED ? Team.BLUE : Team.RED,
       };
       return;
     }

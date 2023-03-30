@@ -1,15 +1,25 @@
 export type PlayerId = string;
 
+export enum Role {
+  OPERATIVE = "OPERATIVE",
+  SPYMASTER = "SPYMASTER"
+}
+
+export enum Team {
+  RED = "RED",
+  BLUE = "BLUE"
+}
+
 class Player {
   public nickname: string;
   public id: PlayerId;
-  public role: string;
-  public team: "RED" | "BLUE";
+  public role: Role;
+  public team: Team;
 
   constructor(
     nickname: string,
-    role: string,
-    team: "RED" | "BLUE",
+    role: Role,
+    team: Team,
     id: PlayerId
   ) {
     this.nickname = nickname;
