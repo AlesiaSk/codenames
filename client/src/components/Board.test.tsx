@@ -38,12 +38,14 @@ describe("<Board />", () => {
       const gameWords = screen.getByTestId("game-words");
       expect(gameWords).toMatchInlineSnapshot(`
         <div
+          class="cards-wrapper"
           data-testid="game-words"
         >
           <button
             class="card"
             data-role="none"
             disabled=""
+            type="button"
           >
             <span>
               word1
@@ -55,6 +57,7 @@ describe("<Board />", () => {
             class="card"
             data-role="red"
             disabled=""
+            type="button"
           >
             <span>
               word2
@@ -89,6 +92,7 @@ describe("<Board />", () => {
       const gameWords = screen.getByTestId("game-words");
       expect(gameWords).toMatchInlineSnapshot(`
         <div
+          class="cards-wrapper"
           data-testid="game-words"
         >
           <button
@@ -96,6 +100,7 @@ describe("<Board />", () => {
             data-highlight="red"
             data-role="none"
             disabled=""
+            type="button"
           >
             <span>
               word1
@@ -108,6 +113,7 @@ describe("<Board />", () => {
             data-highlight="blue"
             data-role="red"
             disabled=""
+            type="button"
           >
             <span>
               word2
@@ -151,11 +157,13 @@ describe("<Board />", () => {
       const gameWords = screen.getByTestId("game-words");
       expect(gameWords).toMatchInlineSnapshot(`
         <div
+          class="cards-wrapper"
           data-testid="game-words"
         >
           <button
             class="card"
             data-role="none"
+            type="button"
           >
             <span>
               word1
@@ -166,6 +174,7 @@ describe("<Board />", () => {
           <button
             class="card"
             data-role="red"
+            type="button"
           >
             <span>
               word2

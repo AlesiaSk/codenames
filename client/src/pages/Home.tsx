@@ -7,6 +7,7 @@ const Home = () => {
 
   return (
     <button
+      type="button"
       onClick={async () => {
         try{
           const { id: roomId} = await GameAPI.create();

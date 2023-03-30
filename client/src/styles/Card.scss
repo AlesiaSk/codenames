@@ -8,23 +8,23 @@
     color: deeppink;
   }
 
-  [data-role="red"],
-  [data-highlight="red"] {
+  &[data-role="red"],
+  &[data-highlight="red"] {
     background-color: #ffa0a0;
   }
 
-  [data-role="blue"],
-  [data-highlight="blue"] {
+  &[data-role="blue"],
+  &[data-highlight="blue"] {
     background-color: #5a7adb;
   }
 
-  [data-role="black"],
-  [data-highlight="black"] {
+  &[data-role="black"],
+  &[data-highlight="black"] {
     background-color: #464646;
   }
 
-  [data-role="neutral"],
-  [data-highlight="neutral"] {
+  &[data-role="neutral"],
+  &[data-highlight="neutral"] {
     background-color: #e7cc6a;
   }
 }

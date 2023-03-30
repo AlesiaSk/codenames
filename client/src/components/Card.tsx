@@ -17,6 +17,7 @@ const Card = ({ word, role, onClick, highlight, disabled }: Props) => {
       data-highlight={highlight}
       onClick={onClick}
       disabled={disabled}
+      type="button"
     >
       <span>
         {word} - {role}

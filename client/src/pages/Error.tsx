@@ -8,6 +8,7 @@ const Error = () => {
     <>
       <h1>Oops.. something went wrong</h1>
       <button
+        type="button"
         onClick={() => {
           navigate("/");
         }}
