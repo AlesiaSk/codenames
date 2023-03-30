@@ -1,6 +1,5 @@
 import React from "react";
 import "../styles/Card.scss";
-import classNames from "classnames";
 
 interface Props {
   word: string;

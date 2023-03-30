@@ -54,38 +54,43 @@ To get a local copy up and running follow these simple example steps.
 ### Installation
 
 1. Clone the repository:
-   ```sh
-   git clone https://github.com/AlesiaSk/codenames.git
-   ```
-2. Install packages for client:
-   ```sh
-   npm install
-   ``` 
-   or   
-   ```sh
-   yarn
-   ```
-3. Move to the server directory, install packages for server:
-   ```sh
-   npm install
-   ``` 
-   or 
-   ```sh
-   yarn
-   ```   
-5. Start the backend Node server:
-   ```sh
-   npm run start
-   ```
-   or
-   ```sh
-   yarn run start
-   ```
-6. Move to the frontend directory and start the React frontend:
-   ```sh
-   cd client
-   npm run start
-   ```
+```sh
+git clone https://github.com/AlesiaSk/codenames.git
+```
+   
+2. Open server directory:
+```shell
+cd server
+```
+
+3. Install packages for server:
+```shell
+yarn
+```
+
+4. Run server:
+```shell
+yarn run
+```
+
+5. Open client directory:
+```shell
+cd ../client
+```
+
+6. Install packages for client:
+```shell
+yarn
+```
+
+7. Run client:
+```shell
+yarn run
+```
+
+8. Navigate to `localhost:3000` in your browser.
+
+9. You can run as many clients as you need for the game
 
 ## Rules
 
