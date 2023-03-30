@@ -66,7 +66,7 @@ describe("<Board />", () => {
       `);
     });
 
-    test("renders words highlighted correctly", () => {
+    test("renders highlighted words correctly", () => {
       const currentGameState = {
         isStarted: true,
         words: ["word1", "word2"],
@@ -128,7 +128,7 @@ describe("<Board />", () => {
       team: Team.RED,
     };
 
-    test("words not disabled when players move and the player is OPERATIVE", () => {
+    test("words are not disabled when player moves and the player has role OPERATIVE", () => {
       const currentGameState = {
         isStarted: true,
         words: ["word1", "word2"],
