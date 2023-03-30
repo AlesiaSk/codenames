@@ -14,9 +14,9 @@ const ClueForm = ({ playerId }: {playerId: string}) => {
       }}
     >
       <label htmlFor="association-input">Association</label>
-      <input id="association-input" type="text" />
+      <input id="association-input" type="text" required />
       <label htmlFor="number-of-words-input">Number of words</label>
-      <input id="number-of-words-input" type="number" />
+      <input id="number-of-words-input" type="number" min="1" max="12" required />
       <button type="submit">Give a clue</button>
     </form>
   );
