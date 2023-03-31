@@ -14,13 +14,15 @@ interface RestoreGameConnectionParams {
   error: string;
 }
 
-const GameInitializer = () => {
+function GameInitializer() {
   const { id: gameId } = useParams();
   const navigate = useNavigate();
   const [player, setPlayer] = useState<Player>();
   const [currentGameState, setCurrentGameState] = useState<GameState>();
   const [rolesOfWords, setRolesOfWords] = useState<Array<string>>([]);
-  const [playerId, setPlayerId] = useState(() => sessionStorage.getItem(`game:${gameId}`));
+  const [playerId, setPlayerId] = useState(() =>
+    sessionStorage.getItem(`game:${gameId}`)
+  );
 
   function handleJoinGame(player: Player) {
     socket.emit("joinGame", { gameId, ...player }, (playerId: string) => {
@@ -79,16 +81,18 @@ const GameInitializer = () => {
   }
 
   if (player) {
-    return (<GameProcess
-      currentGameState={currentGameState}
-      onGameStart={() => socket.emit("startGame")}
-      player={player}
-      playerId={playerId}
-      rolesOfWords={rolesOfWords}
-    />);
+    return (
+      <GameProcess
+        currentGameState={currentGameState}
+        onGameStart={() => socket.emit("startGame")}
+        player={player}
+        playerId={playerId}
+        rolesOfWords={rolesOfWords}
+      />
+    );
   }
 
   return <span>Restoring session...</span>;
-};
+}
 
 export default GameInitializer;

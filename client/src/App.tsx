@@ -5,7 +5,7 @@ import Game from "./pages/Game";
 import Home from "./pages/Home";
 import Error from "./pages/Error";
 
-const App = () => {
+function App() {
   return (
     <main>
       <Router>
@@ -17,6 +17,6 @@ const App = () => {
       </Router>
     </main>
   );
-};
+}
 
 export default App;

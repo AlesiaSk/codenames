@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const Error = () => {
+function Error() {
   const navigate = useNavigate();
 
   return (
@@ -17,6 +17,6 @@ const Error = () => {
       </button>
     </>
   );
-};
+}
 
 export default Error;

@@ -2,10 +2,13 @@
   border: 1px solid deeppink;
   border-radius: 40px;
   padding: 20px;
-  color: white;
 
   &[data-role="none"] {
     color: deeppink;
+  }
+
+  &[data-highlight] {
+    color: white;
   }
 
   &[data-role="red"],

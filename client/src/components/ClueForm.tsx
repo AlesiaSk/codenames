@@ -2,7 +2,7 @@ import React from "react";
 import Clue from "../types/Clue";
 import { spymasterMove } from "../handlers/moveHandlers";
 
-const ClueForm = ({ playerId }: {playerId: string}) => {
+function ClueForm({ playerId }: { playerId: string }) {
   return (
     <form
       onSubmit={(event) => {
@@ -16,10 +16,16 @@ const ClueForm = ({ playerId }: {playerId: string}) => {
       <label htmlFor="association-input">Association</label>
       <input id="association-input" type="text" required />
       <label htmlFor="number-of-words-input">Number of words</label>
-      <input id="number-of-words-input" type="number" min="1" max="12" required />
+      <input
+        id="number-of-words-input"
+        type="number"
+        min="1"
+        max="12"
+        required
+      />
       <button type="submit">Give a clue</button>
     </form>
   );
-};
+}
 
 export default ClueForm;

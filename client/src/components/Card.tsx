@@ -9,7 +9,7 @@ interface Props {
   highlight?: string;
 }
 
-const Card = ({ word, role, onClick, highlight, disabled }: Props) => {
+function Card({ word, role, onClick, highlight, disabled }: Props) {
   return (
     <button
       className="card"
@@ -24,6 +24,6 @@ const Card = ({ word, role, onClick, highlight, disabled }: Props) => {
       </span>
     </button>
   );
-};
+}
 
 export default Card;
