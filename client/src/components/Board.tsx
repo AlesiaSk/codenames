@@ -23,6 +23,10 @@ function Board({
 }: BoardProps) {
   const { words, currentBoard, nextMove } = currentGameState;
   const isPlayerTeamMove = nextMove.team === player.team;
+  const isCardDisabled =
+    !isPlayerTeamMove ||
+    nextMove.type !== "GUESSING" ||
+    player.role !== Role.OPERATIVE;
 
   return (
     <div className="board" data-testid="game-board">
@@ -33,11 +37,7 @@ function Board({
             word={word}
             role={currentBoard[wordIndex]}
             highlight={rolesOfWords[wordIndex]}
-            disabled={
-              !isPlayerTeamMove ||
-              nextMove.type !== "GUESSING" ||
-              player.role !== Role.OPERATIVE
-            }
+            disabled={isCardDisabled}
             onClick={() => operativeMove(playerId, wordIndex)}
           />
         ))}
