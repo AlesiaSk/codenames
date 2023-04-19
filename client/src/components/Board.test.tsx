@@ -4,7 +4,6 @@ import Board from "./Board";
 import { Role, Team } from "../types/Player";
 import { GameMoveType } from "../types/Move";
 import { describe, test, expect } from 'vitest';
-
 describe("<Board />", () => {
   const playerId = "player-id";
 
@@ -48,11 +47,9 @@ describe("<Board />", () => {
             disabled=""
             type="button"
           >
-            <span>
-              word1
-               - 
-              none
-            </span>
+            word1
+             - 
+            none
           </button>
           <button
             class="card"
@@ -60,11 +57,9 @@ describe("<Board />", () => {
             disabled=""
             type="button"
           >
-            <span>
-              word2
-               - 
-              red
-            </span>
+            word2
+             - 
+            red
           </button>
         </div>
       `);
@@ -103,11 +98,9 @@ describe("<Board />", () => {
             disabled=""
             type="button"
           >
-            <span>
-              word1
-               - 
-              none
-            </span>
+            word1
+             - 
+            none
           </button>
           <button
             class="card"
@@ -116,11 +109,9 @@ describe("<Board />", () => {
             disabled=""
             type="button"
           >
-            <span>
-              word2
-               - 
-              red
-            </span>
+            word2
+             - 
+            red
           </button>
         </div>
       `);
@@ -166,22 +157,18 @@ describe("<Board />", () => {
             data-role="none"
             type="button"
           >
-            <span>
-              word1
-               - 
-              none
-            </span>
+            word1
+             - 
+            none
           </button>
           <button
             class="card"
             data-role="red"
             type="button"
           >
-            <span>
-              word2
-               - 
-              red
-            </span>
+            word2
+             - 
+            red
           </button>
         </div>
       `);
