@@ -4,6 +4,7 @@ import Board from "./Board";
 import { Role, Team } from "../types/Player";
 import { GameMoveType } from "../types/Move";
 import { describe, test, expect } from 'vitest';
+
 describe("<Board />", () => {
   const playerId = "player-id";
 
@@ -14,6 +15,31 @@ describe("<Board />", () => {
       role: Role.SPYMASTER,
       team: Team.RED,
     };
+
+    test("renders cards", () => {
+      const currentGameState = {
+        isStarted: true,
+        words: ["word1", "word2", "word3"],
+        currentBoard: ["none", "red", "blue"],
+        nextMove: {
+          type: GameMoveType.GIVE_CLUE,
+          team: Team.RED,
+        },
+      };
+
+      render(
+        <Board
+          playerId={playerId}
+          player={player}
+          rolesOfWords={[]}
+          currentGameState={currentGameState}
+        />
+      );
+
+      const cards = screen.getAllByTestId("game-card");
+
+      expect(cards).toHaveLength(currentGameState.words.length);
+    });
 
     test("renders words correctly", () => {
       const currentGameState = {

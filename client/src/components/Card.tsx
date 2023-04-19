@@ -12,6 +12,7 @@ interface Props {
 function Card({ word, role, onClick, highlight, disabled }: Props) {
   return (
     <button
+      data-testid="game-card"
       className="card"
       data-role={role}
       data-highlight={highlight}

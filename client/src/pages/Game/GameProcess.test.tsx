@@ -9,7 +9,7 @@ import { describe, test, expect } from 'vitest';
 describe("<GameProcess />", () => {
   const playerId = "player-id";
 
-  test("renders start game button when currentGameState is not defined", () => {
+  test("renders start game button when currentGameState is not defined", async () => {
     const player = {
       id: playerId,
       nickname: "Player",
@@ -26,11 +26,12 @@ describe("<GameProcess />", () => {
         onGameStart={onGameStartMock}
       />
     );
+    expect(screen.queryByTestId("game-board")).not.toBeInTheDocument();
 
     const startGameButton = screen.getByTestId("start-game-button");
-    userEvent.click(startGameButton);
-    // expect(onGameStartMock).toHaveBeenCalledTimes(1);
-    expect(screen.queryByTestId("game-board")).not.toBeInTheDocument();
+    await userEvent.click(startGameButton);
+    expect(onGameStartMock).toHaveBeenCalledTimes(1);
+
   });
 
   test("renders board when currentGameState is defined", () => {
