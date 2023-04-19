@@ -19,9 +19,7 @@ function Card({ word, role, onClick, highlight, disabled }: Props) {
       disabled={disabled}
       type="button"
     >
-      <span>
-        {word} - {role}
-      </span>
+      {word} - {role}
     </button>
   );
 }

@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import Board from "./Board";
 import { Role, Team } from "../types/Player";
 import { GameMoveType } from "../types/Move";
+import { describe, test, expect } from 'vitest';
 
 describe("<Board />", () => {
   const playerId = "player-id";
