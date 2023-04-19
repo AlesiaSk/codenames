@@ -13,9 +13,7 @@ interface GameProcessorProps {
 
 function GameProcess({ currentGameState, player, rolesOfWords, playerId, onGameStart}: GameProcessorProps) {
   if (!currentGameState) {
-    return (<button type="button" onClick={()=>{
-      onGameStart()
-    }} data-testid="start-game-button">
+    return (<button type="button" onClick={onGameStart} data-testid="start-game-button">
       Start the game
     </button>);
   }
