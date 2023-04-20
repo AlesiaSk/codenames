@@ -46,25 +46,22 @@ class Game {
       return false;
     }
 
-    if (playerMove.type === "GIVE_CLUE") {
-      this.currentClue = playerMove.clue;
-      this.nextMove = { type: "GUESSING", team: player.team };
-      return;
-    }
-
-    if (playerMove.type === "GUESSING") {
-      this.currentBoard[playerMove.wordIndex] =
-        this.rolesOfWords[playerMove.wordIndex];
-      this.nextMove = { type: "GUESSING", team: player.team };
-      return;
-    }
-
-    if (playerMove.type === "END_GUESSING") {
-      this.nextMove = {
-        type: "GIVE_CLUE",
-        team: player.team === Team.RED ? Team.BLUE : Team.RED,
-      };
-      return;
+    switch(playerMove.type) {
+      case "GIVE_CLUE":
+        this.currentClue = playerMove.clue;
+        this.nextMove = { type: "GUESSING", team: player.team };
+        break;
+      case "END_GUESSING":
+        this.nextMove = {
+          type: "GIVE_CLUE",
+          team: player.team === Team.RED ? Team.BLUE : Team.RED,
+        };
+        break;
+      case "GUESSING":
+        this.currentBoard[playerMove.wordIndex] =
+          this.rolesOfWords[playerMove.wordIndex];
+        this.nextMove = { type: "GUESSING", team: player.team };
+        break;
     }
   }
 
