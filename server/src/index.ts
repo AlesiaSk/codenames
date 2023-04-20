@@ -114,6 +114,7 @@ io.on("connection", (socket) => {
         currentBoard: game.currentBoard,
         players: game.players,
         nextMove: game.nextMove,
+        winner: game.winner
       });
     }
   );

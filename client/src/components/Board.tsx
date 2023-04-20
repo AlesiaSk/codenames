@@ -21,7 +21,7 @@ function Board({
   player,
   playerId,
 }: BoardProps) {
-  const { words, currentBoard, nextMove } = currentGameState;
+  const { words, currentBoard, nextMove, winner } = currentGameState;
   const isPlayerTeamMove = nextMove.team === player.team;
   const isCardDisabled =
     !isPlayerTeamMove ||
@@ -30,6 +30,7 @@ function Board({
 
   return (
     <div className="board" data-testid="game-board">
+      {winner && <p>Thw winner is {winner} team</p>}
       <div className="cards-wrapper" data-testid="game-words">
         {words.map((word, wordIndex) => (
           <Card

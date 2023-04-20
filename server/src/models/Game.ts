@@ -1,5 +1,5 @@
-import Player, {PlayerId, Role, Team} from "./Player";
-import {GameMove, PlayerMove} from "../types/Move";
+import Player, { PlayerId, Role, Team } from "./Player";
+import { GameMove, PlayerMove } from "../types/Move";
 import Clue from "../types/Clue";
 
 class Game {
@@ -11,10 +11,13 @@ class Game {
   public isStarted: Boolean;
   public nextMove: GameMove;
   public currentClue: Clue;
+  public winner: undefined | Team;
+  readonly numberOfRedWords: number;
 
   constructor() {
     // Here will be logic for creating random set of words and random roles for them
     this.rolesOfWords = ["red", "blue", "black", "neutral", "red"];
+    this.numberOfRedWords = this.rolesOfWords.filter(word => word === 'red').length;
     this.words = ["Test1", "Test2", "Test3", "Test4", "Test5"];
     this.currentBoard = new Array(5).fill("none");
     this.players = new Map<PlayerId, Player>();
@@ -46,7 +49,7 @@ class Game {
       return false;
     }
 
-    switch(playerMove.type) {
+    switch (playerMove.type) {
       case "GIVE_CLUE":
         this.currentClue = playerMove.clue;
         this.nextMove = { type: "GUESSING", team: player.team };
@@ -61,7 +64,27 @@ class Game {
         this.currentBoard[playerMove.wordIndex] =
           this.rolesOfWords[playerMove.wordIndex];
         this.nextMove = { type: "GUESSING", team: player.team };
+        this.checkWin(player.team);
         break;
+    }
+  }
+
+  checkWin(currentTeam: Team) {
+    // 7 neutral
+    // 1 black
+    // 9|8 blue
+    // 9|8 red
+    const isCurrentTeamRed = currentTeam === Team.RED;
+    if (this.currentBoard.includes("black")) {
+      this.winner = isCurrentTeamRed ? Team.BLUE : Team.RED;
+      return;
+    }
+    if(isCurrentTeamRed && this.currentBoard.filter(word => word === 'red').length === this.numberOfRedWords) {
+      this.winner = Team.RED;
+      return;
+    }
+    if(!isCurrentTeamRed && this.currentBoard.filter(word => word === 'blue').length === (this.numberOfRedWords -1)) {
+      this.winner = Team.BLUE;
     }
   }
 
