@@ -48,7 +48,7 @@ describe("<GameProcess />", () => {
       nextMove: {
         type: GameMoveType.GIVE_CLUE,
         team: Team.RED
-      }
+      },
     };
 
     render(

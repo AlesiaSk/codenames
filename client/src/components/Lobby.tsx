@@ -7,7 +7,7 @@ interface LobbyProps {
 
 function Lobby ({ onJoinGameSubmit }: LobbyProps) {
     return (
-        <form onSubmit={e => {
+        <form onSubmit={(e) => {
             e.preventDefault();
             const form = e.target as HTMLFormElement;
             const formData = new FormData(form);

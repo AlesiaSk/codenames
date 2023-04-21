@@ -105,7 +105,7 @@ io.on("connection", (socket) => {
         console.log("Move is not valid");
         return;
       }
-
+      console.log('move', move)
       game.move(playerId, move);
 
       io.in(gameId).emit("gameMove", {
@@ -114,6 +114,7 @@ io.on("connection", (socket) => {
         currentBoard: game.currentBoard,
         players: game.players,
         nextMove: game.nextMove,
+        currentClue: game.currentClue,
         winner: game.winner
       });
     }

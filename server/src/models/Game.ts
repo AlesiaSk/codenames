@@ -10,8 +10,8 @@ class Game {
   public players: Map<PlayerId, Player>;
   public isStarted: Boolean;
   public nextMove: GameMove;
-  public currentClue: Clue;
-  public winner: undefined | Team;
+  public currentClue?: Clue;
+  public winner?: Team;
   readonly numberOfRedWords: number;
 
   constructor() {
@@ -52,7 +52,7 @@ class Game {
     switch (playerMove.type) {
       case "GIVE_CLUE":
         this.currentClue = playerMove.clue;
-        this.nextMove = { type: "GUESSING", team: player.team };
+        this.nextMove = { type: "GUESSING", team: player.team};
         break;
       case "END_GUESSING":
         this.nextMove = {
@@ -72,8 +72,8 @@ class Game {
   checkWin(currentTeam: Team) {
     // 7 neutral
     // 1 black
-    // 9|8 blue
-    // 9|8 red
+    // 8 blue
+    // 9 red
     const isCurrentTeamRed = currentTeam === Team.RED;
     if (this.currentBoard.includes("black")) {
       this.winner = isCurrentTeamRed ? Team.BLUE : Team.RED;

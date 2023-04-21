@@ -21,7 +21,7 @@ function Board({
   player,
   playerId,
 }: BoardProps) {
-  const { words, currentBoard, nextMove, winner } = currentGameState;
+  const { words, currentBoard, nextMove, winner, currentClue } = currentGameState;
   const isPlayerTeamMove = nextMove.team === player.team;
   const isCardDisabled =
     !isPlayerTeamMove ||
@@ -31,13 +31,14 @@ function Board({
   return (
     <div className="board" data-testid="game-board">
       {winner && <p>Thw winner is {winner} team</p>}
+      {currentClue && <p>CLUE - {currentClue.association}, NUMBER OF WORDS - {currentClue.numberOfWords}</p>}
       <div className="cards-wrapper" data-testid="game-words">
         {words.map((word, wordIndex) => (
           <Card
             key={word}
             word={word}
             role={currentBoard[wordIndex]}
-            highlight={rolesOfWords[wordIndex]}
+            highlight={rolesOfWords && rolesOfWords[wordIndex]}
             disabled={isCardDisabled}
             onClick={() => operativeMove(playerId, wordIndex)}
           />
