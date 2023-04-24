@@ -4,7 +4,8 @@ import {Team} from "./Player";
 export enum PlayerMoveType {
   GUESSING = "GUESSING",
   END_GUESSING = "END_GUESSING",
-  GIVE_CLUE = "GIVE_CLUE"
+  GIVE_CLUE = "GIVE_CLUE",
+  GUESSING_AND_END_GUESSING = "GUESSING_AND_END_GUESSING"
 }
 
 export enum GameMoveType {
@@ -31,4 +32,9 @@ export interface GameMove {
   team: Team;
 }
 
-export type PlayerMove = GiveClueMove | GuessingMove | EndGuessingMove;
+export interface GuessingAndEndGuessingMove {
+  type: PlayerMoveType.GUESSING_AND_END_GUESSING;
+  wordIndex: number;
+}
+
+export type PlayerMove = GiveClueMove | GuessingMove | EndGuessingMove | GuessingAndEndGuessingMove;

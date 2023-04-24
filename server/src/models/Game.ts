@@ -55,6 +55,7 @@ class Game {
         this.nextMove = { type: "GUESSING", team: player.team};
         break;
       case "END_GUESSING":
+        this.currentClue = undefined;
         this.nextMove = {
           type: "GIVE_CLUE",
           team: player.team === Team.RED ? Team.BLUE : Team.RED,
@@ -65,6 +66,16 @@ class Game {
           this.rolesOfWords[playerMove.wordIndex];
         this.nextMove = { type: "GUESSING", team: player.team };
         this.checkWin(player.team);
+        break;
+      case "GUESSING_AND_END_GUESSING":
+        this.currentClue = undefined;
+        this.currentBoard[playerMove.wordIndex] =
+          this.rolesOfWords[playerMove.wordIndex];
+        this.checkWin(player.team);
+        this.nextMove = {
+          type: "GIVE_CLUE",
+          team: player.team === Team.RED ? Team.BLUE : Team.RED,
+        };
         break;
     }
   }
@@ -99,7 +110,7 @@ class Game {
       this.nextMove.team === player.team &&
       (this.nextMove.type === playerMove.type ||
         (this.nextMove.type === "GUESSING" &&
-          playerMove.type === "END_GUESSING"))
+          (playerMove.type === "END_GUESSING" || playerMove.type === "GUESSING_AND_END_GUESSING")))
     );
   }
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef} from "react";
 
 import Card from "./Card";
 import ClueForm from "./ClueForm";
@@ -6,7 +6,8 @@ import ClueForm from "./ClueForm";
 import GameState from "../types/GameState";
 import Player, { Role } from "../types/Player";
 
-import { endGuessing, operativeMove } from "../handlers/moveHandlers";
+import { endGuessing } from "../handlers/moveHandlers";
+import { socket } from "../socket";
 
 interface BoardProps {
   player: Player;
@@ -27,6 +28,28 @@ function Board({
     !isPlayerTeamMove ||
     nextMove.type !== "GUESSING" ||
     player.role !== Role.OPERATIVE;
+  const numberOfGuessedWords = useRef(0);
+
+  function operativeMove(playerId: string, wordIndex: number) {
+    if(numberOfGuessedWords.current.toString() === currentClue?.numberOfWords) {
+      socket.emit("playerMove", {
+        playerId,
+        move: {
+          type: "GUESSING_AND_END_GUESSING",
+          wordIndex,
+        },
+      });
+      return;
+    }
+    socket.emit("playerMove", {
+      playerId,
+      move: {
+        type: "GUESSING",
+        wordIndex,
+      },
+    });
+    numberOfGuessedWords.current++;
+  }
 
   return (
     <div className="board" data-testid="game-board">

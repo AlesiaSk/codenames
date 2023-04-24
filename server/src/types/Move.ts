@@ -11,6 +11,11 @@ export interface GuessingMove {
   wordIndex: number;
 }
 
+export interface GuessingAndEndGuessingMove {
+  type: "GUESSING_AND_END_GUESSING";
+  wordIndex: number;
+}
+
 export interface EndGuessingMove {
   type: "END_GUESSING";
 }
@@ -20,4 +25,4 @@ export interface GameMove {
   team: Team;
 }
 
-export type PlayerMove = GiveClueMove | GuessingMove | EndGuessingMove;
+export type PlayerMove = GiveClueMove | GuessingMove | EndGuessingMove | GuessingAndEndGuessingMove;

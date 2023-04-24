@@ -11,16 +11,6 @@ export function spymasterMove(playerId: string, clue: Clue) {
   });
 }
 
-export function operativeMove(playerId: string, wordIndex: number) {
-  socket.emit("playerMove", {
-    playerId,
-    move: {
-      type: "GUESSING",
-      wordIndex,
-    },
-  });
-}
-
 export function endGuessing(playerId: string) {
   socket.emit("playerMove", {
     playerId,
