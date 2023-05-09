@@ -1,0 +1,75 @@
+.home-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  min-height: 100vh;
+
+  &__helper {
+    display: flex;
+  }
+
+  &__helper-character {
+    width: 15rem;
+  }
+
+  &__helper-text {
+    font-family: "Darumadrop One", cursive;
+    font-size: 2rem;
+    max-width: 500px;
+    overflow: hidden;
+    margin: 0 auto;
+  }
+
+  &__helper-info {
+    position: relative;
+    display: flex;
+  }
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.arrow {
+  position: absolute;
+  right: -45px;
+  top: -25%;
+  margin: 0 auto;
+  border-width: 2px;
+  border-style: dashed;
+  border-color: transparent #921d1d transparent transparent;
+  height: 250px;
+  width: 70px;
+  border-radius: 100%;
+}
+
+.arrow .point {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.arrow .point:before, .arrow .point:after {
+  border: 1px solid #BE5F4B;
+  height: 25px;
+  content: "";
+  position: absolute;
+}
+
+.arrow .point:before {
+  top: 5px;
+  left: -5px;
+  transform: rotate(297deg);
+}
+
+.arrow .point:after {
+  top: 10px;
+  left: -23px;
+  transform: rotate(22deg);
+}

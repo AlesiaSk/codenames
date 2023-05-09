@@ -53,7 +53,7 @@ function Board({
 
   return (
     <div className="board" data-testid="game-board">
-      {winner && <p>Thw winner is {winner} team</p>}
+      {winner && <p>Thу winner is {winner} team</p>}
       {currentClue && <p>CLUE - {currentClue.association}, NUMBER OF WORDS - {currentClue.numberOfWords}</p>}
       <div className="cards-wrapper" data-testid="game-words">
         {words.map((word, wordIndex) => (
