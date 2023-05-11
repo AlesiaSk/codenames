@@ -12,10 +12,10 @@ function Home() {
 
   return (
     <div className="home-page">
-      <button
-        className="home-page__button primary-button"
-        type="button"
-        onClick={async () => {
+      <form
+        className="home-page__form"
+        onSubmit={async (e) => {
+          e.preventDefault();
           try {
             const { id: roomId } = await GameAPI.create();
             if (roomId) {
@@ -26,19 +26,25 @@ function Home() {
           }
         }}
       >
-        Create game
-      </button>
+        <label htmlFor="nickname">Enter your nickname</label>
+        <input required id="nickname" name="nickname" maxLength={20} />
+        <button className="home-page__button primary-button">
+          Create game
+        </button>
+      </form>
       <div className="home-page__helper">
         <img src={peep} className="home-page__helper-character" alt="Helper" />
         <div className="home-page__helper-info">
           <p className="home-page__helper-text">
             <TypedText text={text}>
-              <a href="/rules">Yep!</a>
+              <>
+                <a href="/rules">Yep!</a>
+                <div className="arrow">
+                  <div className="point"></div>
+                </div>
+              </>
             </TypedText>
           </p>
-          <div className="arrow">
-            <div className="point"></div>
-          </div>
         </div>
       </div>
     </div>

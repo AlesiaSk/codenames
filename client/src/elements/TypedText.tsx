@@ -18,7 +18,7 @@ function TypedText({ text, children }: TypedTextProps) {
       } else {
         clearInterval(intervalId);
       }
-    }, 100);
+    }, 50);
 
     return () => {
       clearInterval(intervalId);
