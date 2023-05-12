@@ -14,7 +14,7 @@ function JoinGameForm({ setPlayerId }: JoinGameFormProps) {
   function handleJoinGame(player: Player, gameId: string) {
     socket.emit("joinGame", { gameId, ...player }, (playerId: string) => {
       sessionStorage.setItem(`game:${gameId}`, playerId);
-      if(setPlayerId) {
+      if (setPlayerId) {
         setPlayerId(playerId);
       }
     });

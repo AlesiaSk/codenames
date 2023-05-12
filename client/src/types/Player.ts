@@ -1,15 +1,16 @@
 export enum Role {
   OPERATIVE = "OPERATIVE",
-  SPYMASTER = "SPYMASTER"
+  SPYMASTER = "SPYMASTER",
 }
 
 export enum Team {
   RED = "RED",
-  BLUE = "BLUE"
+  BLUE = "BLUE",
 }
 
 type Player = {
   nickname: string;
+
   id: string;
   role?: Role;
   team?: Team;

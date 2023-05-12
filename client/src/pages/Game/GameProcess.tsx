@@ -4,18 +4,29 @@ import Player from "../../types/Player";
 import GameState from "../../types/GameState";
 
 interface GameProcessorProps {
-  onGameStart: () => void,
+  onGameStart: () => void;
   player: Player;
-  playerId: string,
+  playerId: string;
   rolesOfWords: Array<string>;
   currentGameState?: GameState;
 }
-
-function GameProcess({ currentGameState, player, rolesOfWords, playerId, onGameStart}: GameProcessorProps) {
+function GameProcess({
+  currentGameState,
+  player,
+  rolesOfWords,
+  playerId,
+  onGameStart,
+}: GameProcessorProps) {
   if (!currentGameState) {
-    return (<button type="button" onClick={onGameStart} data-testid="start-game-button">
-      Start the game
-    </button>);
+    return (
+      <button
+        type="button"
+        onClick={onGameStart}
+        data-testid="start-game-button"
+      >
+        Start the game
+      </button>
+    );
   }
 
   return (
@@ -25,7 +36,7 @@ function GameProcess({ currentGameState, player, rolesOfWords, playerId, onGameS
       currentGameState={currentGameState}
       rolesOfWords={rolesOfWords}
     />
-  )
+  );
 }
 
 export default GameProcess;

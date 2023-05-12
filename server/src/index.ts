@@ -40,32 +40,29 @@ const socketsStorage = new Map<PlayerId, SocketId>();
 io.on("connection", (socket) => {
   io.to(socket.id).emit("server_id", socket.id);
 
-  socket.on(
-    "joinGame",
-    ({ gameId, nickname }: JoinGameParams, callback) => {
-      const game = gameStore.get(gameId);
+  socket.on("joinGame", ({ gameId, nickname }: JoinGameParams, callback) => {
+    const game = gameStore.get(gameId);
 
-      if (!game) {
-        console.log("There is no game with provided id");
-        return;
-      }
-      // add check if this nickname exists
-
-      if (game.isStarted) {
-        console.log("New players can not join when the game is in progress");
-        return;
-      }
-
-      socket.join(gameId);
-      socket.data.gameId = gameId;
-      const id = uuidv4();
-      io.of("/").adapter.rooms.set(id, new Set(socket.id));
-      socketsStorage.set(id, socket.id);
-      game.addPlayer(new Player(nickname, id));
-      callback(id);
-      io.in(gameId).emit("gamePlayers", Array.from(game.players.values()));
+    if (!game) {
+      console.log("There is no game with provided id");
+      return;
     }
-  );
+    // add check if this nickname exists
+
+    if (game.isStarted) {
+      console.log("New players can not join when the game is in progress");
+      return;
+    }
+
+    socket.join(gameId);
+    socket.data.gameId = gameId;
+    const id = uuidv4();
+    io.of("/").adapter.rooms.set(id, new Set(socket.id));
+    socketsStorage.set(id, socket.id);
+    game.addPlayer(new Player(nickname, id));
+    callback(id);
+    io.in(gameId).emit("gamePlayers", Array.from(game.players.values()));
+  });
 
   socket.on(
     "joinTeam",
@@ -85,7 +82,7 @@ io.on("connection", (socket) => {
 
       const player = game.getPlayer(playerId);
 
-      if(!player) {
+      if (!player) {
         console.log("There is no player with provided id");
         return;
       }
@@ -147,7 +144,7 @@ io.on("connection", (socket) => {
         players: game.players,
         nextMove: game.nextMove,
         currentClue: game.currentClue,
-        winner: game.winner
+        winner: game.winner,
       });
     }
   );

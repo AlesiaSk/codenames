@@ -28,7 +28,7 @@ function GameInitializer() {
   );
 
   function handleJoinGame(player: Player) {
-    socket.emit("joinGame", {...player });
+    socket.emit("joinGame", { ...player });
   }
 
   useEffect(() => {
@@ -81,7 +81,7 @@ function GameInitializer() {
     return <JoinGameForm setPlayerId={setPlayerId} />;
   }
 
-  if(!player.role || !player.team) {
+  if (!player.role || !player.team) {
     return <Lobby playerId={playerId} gamePlayers={players} />;
   }
 
