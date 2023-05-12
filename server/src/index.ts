@@ -12,6 +12,7 @@ import JoinGameParams from "./types/JoinGameParams";
 import { PlayerMove } from "./types/Move";
 
 import gameStore from "./InMemoryGameStore";
+import JoinTeamParams from "./types/JoinTeamParams";
 
 const app = express();
 const server = createServer(app);
@@ -41,7 +42,35 @@ io.on("connection", (socket) => {
 
   socket.on(
     "joinGame",
-    ({ gameId, nickname, role, team }: JoinGameParams, callback) => {
+    ({ gameId, nickname }: JoinGameParams, callback) => {
+      const game = gameStore.get(gameId);
+
+      if (!game) {
+        console.log("There is no game with provided id");
+        return;
+      }
+      // add check if this nickname exists
+
+      if (game.isStarted) {
+        console.log("New players can not join when the game is in progress");
+        return;
+      }
+
+      socket.join(gameId);
+      socket.data.gameId = gameId;
+      const id = uuidv4();
+      io.of("/").adapter.rooms.set(id, new Set(socket.id));
+      socketsStorage.set(id, socket.id);
+      game.addPlayer(new Player(nickname, id));
+      callback(id);
+      io.in(gameId).emit("gamePlayers", Array.from(game.players.values()));
+    }
+  );
+
+  socket.on(
+    "joinTeam",
+    ({ playerId, role, team }: JoinTeamParams, callback) => {
+      const { gameId } = socket.data;
       const game = gameStore.get(gameId);
 
       if (!game) {
@@ -54,13 +83,17 @@ io.on("connection", (socket) => {
         return;
       }
 
-      socket.join(gameId);
-      socket.data.gameId = gameId;
-      const id = uuidv4();
-      io.of("/").adapter.rooms.set(id, new Set(socket.id));
-      socketsStorage.set(id, socket.id);
-      game.addPlayer(new Player(nickname, role, team, id));
-      callback(id);
+      const player = game.getPlayer(playerId);
+
+      if(!player) {
+        console.log("There is no player with provided id");
+        return;
+      }
+
+      player.setRole(role);
+      player.setTeam(team);
+
+      io.in(gameId).emit("gamePlayers", Array.from(game.players.values()));
     }
   );
 
@@ -105,7 +138,6 @@ io.on("connection", (socket) => {
         console.log("Move is not valid");
         return;
       }
-      console.log('move', move)
       game.move(playerId, move);
 
       io.in(gameId).emit("gameMove", {
@@ -158,6 +190,7 @@ io.on("connection", (socket) => {
           nextMove: game.nextMove,
         },
         player,
+        players: Array.from(game.players.values()),
         rolesOfWords:
           player.role === Role.SPYMASTER ? game.rolesOfWords : undefined,
       });

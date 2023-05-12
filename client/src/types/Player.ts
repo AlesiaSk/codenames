@@ -11,8 +11,8 @@ export enum Team {
 type Player = {
   nickname: string;
   id: string;
-  role: Role;
-  team: Team;
+  role?: Role;
+  team?: Team;
 };
 
 export default Player;

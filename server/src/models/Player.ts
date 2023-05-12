@@ -18,14 +18,18 @@ class Player {
 
   constructor(
     nickname: string,
-    role: Role,
-    team: Team,
     id: PlayerId
   ) {
     this.nickname = nickname;
-    this.role = role;
-    this.team = team;
     this.id = id;
+  }
+
+  setRole(role: Role) {
+    this.role = role;
+  };
+
+  setTeam(team: Team) {
+    this.team = team;
   }
 }
 

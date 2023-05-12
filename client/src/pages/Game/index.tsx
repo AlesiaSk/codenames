@@ -9,7 +9,6 @@ function Game() {
   const [doesGameExist, setDoesGameExist] = useState(false);
 
   useEffect(() => {
-    console.log('socket', socket)
     socket.emit("doesGameExist", gameId, ({ error }: { error: string }) => {
       if (error) {
         navigate("/error");

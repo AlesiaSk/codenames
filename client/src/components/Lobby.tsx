@@ -1,36 +1,77 @@
-import React from "react";
-import Player, {Role} from "../types/Player";
+import React, { useEffect, useState } from "react";
+import Player, { Role, Team } from "../types/Player";
+import "../styles/Lobby.scss";
+import { socket } from "../socket";
 
 interface LobbyProps {
-    onJoinGameSubmit: (player: Player) => void
+  playerId: string;
+  gamePlayers: Array<Player>;
 }
 
-function Lobby ({ onJoinGameSubmit }: LobbyProps) {
-    return (
-        <form onSubmit={(e) => {
-            e.preventDefault();
-            const form = e.target as HTMLFormElement;
-            const formData = new FormData(form);
-            const data = Object.fromEntries(formData.entries()) as Player;
-            onJoinGameSubmit(data);
-        }}>
-            <label>
-                Nickname
-                <input required name="nickname" maxLength={20} />
-            </label>
-            <p>
-                Team:
-                <label><input type="radio" name="team" value="RED" /> Red </label>
-                <label><input type="radio" name="team" value="BLUE" defaultChecked={true} /> Blue </label>
-            </p>
-            <p>
-                Role:
-                <label><input type="radio" name="role" value={Role.SPYMASTER} /> Spymaster </label>
-                <label><input type="radio" name="role" value={Role.OPERATIVE} defaultChecked={true} /> Operative </label>
-            </p>
-            <button type="submit">Join the game</button>
-        </form>
-    )
+function Lobby({ playerId, gamePlayers }: LobbyProps) {
+  const [players, setPlayers] = useState<Array<Player>>(gamePlayers);
+  function handleJoinTeam(team: Team, role: Role) {
+    socket.emit("joinTeam", { playerId, team, role });
+  }
+
+  useEffect(() => {
+    function onGamePlayers(currentPlayers: Array<Player>) {
+      setPlayers(currentPlayers);
+    }
+
+    socket.on("gamePlayers", onGamePlayers);
+  }, []);
+
+  return (
+    <div className="lobby">
+      <div className="lobby__team-wrapper">
+        <div className="lobby__team lobby__team-red">
+          <p>Red team</p>
+          <button
+            className="primary-button"
+            onClick={() => handleJoinTeam(Team.RED, Role.SPYMASTER)}
+          >
+            Join as a spymaster
+          </button>
+          <button
+            className="primary-button"
+            onClick={() => handleJoinTeam(Team.RED, Role.OPERATIVE)}
+          >
+            Join as an operative
+          </button>
+        </div>
+        <div className="lobby__team lobby__team-blue">
+          <p>Blue team</p>
+          <button
+            className="primary-button"
+            onClick={() => handleJoinTeam(Team.BLUE, Role.SPYMASTER)}
+          >
+            Join as a spymaster
+          </button>
+          <button
+            className="primary-button"
+            onClick={() => handleJoinTeam(Team.BLUE, Role.OPERATIVE)}
+          >
+            Join as an operative
+          </button>
+        </div>
+      </div>
+      {players.map((player) => (
+        <div key={player.id}>
+          <p>{player.nickname}</p>
+          <p>{player.role}</p>
+          <p>{player.team}</p>
+        </div>
+      ))}
+      <button
+        className="primary-button"
+        type="button"
+        onClick={() => socket.emit("startGame")}
+      >
+        Start
+      </button>
+    </div>
+  );
 }
 
 export default Lobby;

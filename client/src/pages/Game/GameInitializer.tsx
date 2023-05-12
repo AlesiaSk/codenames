@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
-import Lobby from "../../components/Lobby";
 import GameProcess from "./GameProcess";
 import GameState from "../../types/GameState";
 import Player from "../../types/Player";
 
 import { socket } from "../../socket";
 import { useNavigate, useParams } from "react-router-dom";
+import JoinGameForm from "../../components/JoinGameForm";
+import Lobby from "../../components/Lobby";
 
 interface RestoreGameConnectionParams {
   gameState: GameState;
   player: Player;
+  players: Array<Player>;
   rolesOfWords: Array<string>;
   error: string;
 }
@@ -18,6 +20,7 @@ function GameInitializer() {
   const { id: gameId } = useParams();
   const navigate = useNavigate();
   const [player, setPlayer] = useState<Player>();
+  const [players, setPlayers] = useState<Array<Player>>([]);
   const [currentGameState, setCurrentGameState] = useState<GameState>();
   const [rolesOfWords, setRolesOfWords] = useState<Array<string>>([]);
   const [playerId, setPlayerId] = useState(() =>
@@ -25,11 +28,7 @@ function GameInitializer() {
   );
 
   function handleJoinGame(player: Player) {
-    socket.emit("joinGame", { gameId, ...player }, (playerId: string) => {
-      sessionStorage.setItem(`game:${gameId}`, playerId);
-      setPlayer(player);
-      setPlayerId(playerId);
-    });
+    socket.emit("joinGame", {...player });
   }
 
   useEffect(() => {
@@ -59,6 +58,7 @@ function GameInitializer() {
           gameState,
           rolesOfWords,
           player,
+          players,
           error,
         }: RestoreGameConnectionParams) => {
           if (error) {
@@ -67,6 +67,7 @@ function GameInitializer() {
 
           setPlayer(player);
           setRolesOfWords(rolesOfWords);
+          setPlayers(players);
 
           if (gameState.isStarted) {
             setCurrentGameState(gameState);
@@ -76,8 +77,12 @@ function GameInitializer() {
     }
   }, [gameId, navigate, player, playerId]);
 
-  if (!playerId) {
-    return <Lobby onJoinGameSubmit={handleJoinGame} />;
+  if (!playerId || !player) {
+    return <JoinGameForm setPlayerId={setPlayerId} />;
+  }
+
+  if(!player.role || !player.team) {
+    return <Lobby playerId={playerId} gamePlayers={players} />;
   }
 
   if (player) {

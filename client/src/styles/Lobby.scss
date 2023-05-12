@@ -1,0 +1,15 @@
+.lobby {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  &__team-wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__team {
+    display: flex;
+    flex-direction: column;
+  }
+}
