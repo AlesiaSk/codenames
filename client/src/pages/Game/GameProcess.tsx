@@ -8,27 +8,14 @@ interface GameProcessorProps {
   player: Player;
   playerId: string;
   rolesOfWords: Array<string>;
-  currentGameState?: GameState;
+  currentGameState: GameState;
 }
 function GameProcess({
   currentGameState,
   player,
   rolesOfWords,
   playerId,
-  onGameStart,
 }: GameProcessorProps) {
-  if (!currentGameState) {
-    return (
-      <button
-        type="button"
-        onClick={onGameStart}
-        data-testid="start-game-button"
-      >
-        Start the game
-      </button>
-    );
-  }
-
   return (
     <Board
       playerId={playerId}

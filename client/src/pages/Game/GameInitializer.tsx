@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import GameProcess from "./GameProcess";
+import Board from "../../components/Board";
 import GameState from "../../types/GameState";
 import Player from "../../types/Player";
 
@@ -81,15 +81,14 @@ function GameInitializer() {
     return <JoinGameForm setPlayerId={setPlayerId} />;
   }
 
-  if (!player.role || !player.team) {
+  if ((!player.role || !player.team) && !currentGameState) {
     return <Lobby playerId={playerId} gamePlayers={players} />;
   }
 
-  if (player) {
+  if (player && currentGameState) {
     return (
-      <GameProcess
+      <Board
         currentGameState={currentGameState}
-        onGameStart={() => socket.emit("startGame")}
         player={player}
         playerId={playerId}
         rolesOfWords={rolesOfWords}
