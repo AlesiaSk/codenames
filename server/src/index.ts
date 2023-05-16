@@ -64,35 +64,36 @@ io.on("connection", (socket) => {
     io.in(gameId).emit("gamePlayers", Array.from(game.players.values()));
   });
 
-  socket.on(
-    "joinTeam",
-    ({ playerId, role, team }: JoinTeamParams, callback) => {
-      const { gameId } = socket.data;
-      const game = gameStore.get(gameId);
+  socket.on("joinTeam", ({ playerId, role, team }: JoinTeamParams) => {
+    const { gameId } = socket.data;
+    const game = gameStore.get(gameId);
 
-      if (!game) {
-        console.log("There is no game with provided id");
-        return;
-      }
-
-      if (game.isStarted) {
-        console.log("New players can not join when the game is in progress");
-        return;
-      }
-
-      const player = game.getPlayer(playerId);
-
-      if (!player) {
-        console.log("There is no player with provided id");
-        return;
-      }
-
-      player.setRole(role);
-      player.setTeam(team);
-
-      io.in(gameId).emit("gamePlayers", Array.from(game.players.values()));
+    if (!game) {
+      console.log("There is no game with provided id");
+      return;
     }
-  );
+
+    if (game.isStarted) {
+      console.log("New players can not join when the game is in progress");
+      return;
+    }
+
+    const player = game.getPlayer(playerId);
+
+    if (!player) {
+      console.log("There is no player with provided id");
+      return;
+    }
+
+    player.setRole(role);
+    player.setTeam(team);
+
+    if (role === Role.SPYMASTER) {
+      game.addSpymaster(player);
+    }
+
+    io.in(gameId).emit("gamePlayers", Array.from(game.players.values()));
+  });
 
   socket.on("startGame", () => {
     const { gameId } = socket.data;

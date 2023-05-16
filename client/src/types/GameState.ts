@@ -1,5 +1,5 @@
 import { GameMove } from "./Move";
-import { Team } from "./Player";
+import Player, { Team } from "./Player";
 import Clue from "./Clue";
 
 interface GameState {
@@ -9,6 +9,7 @@ interface GameState {
   nextMove: GameMove;
   currentClue?: Clue;
   winner?: Team;
+  players: Array<Player>;
 }
 
 export default GameState;

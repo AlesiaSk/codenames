@@ -1,4 +1,4 @@
-import React, {useRef} from "react";
+import React, { useRef } from "react";
 
 import Card from "./Card";
 import ClueForm from "./ClueForm";
@@ -19,19 +19,24 @@ interface BoardProps {
 function Board({
   currentGameState,
   rolesOfWords,
-  player,
   playerId,
+  player,
 }: BoardProps) {
-  const { words, currentBoard, nextMove, winner, currentClue } = currentGameState;
+  const { words, currentBoard, nextMove, winner, currentClue, players } =
+    currentGameState;
   const isPlayerTeamMove = nextMove.team === player.team;
   const isCardDisabled =
     !isPlayerTeamMove ||
     nextMove.type !== "GUESSING" ||
     player.role !== Role.OPERATIVE;
   const numberOfGuessedWords = useRef(0);
+  console.log("nextMove", nextMove);
+  console.log("player", player);
 
   function operativeMove(playerId: string, wordIndex: number) {
-    if(numberOfGuessedWords.current.toString() === currentClue?.numberOfWords) {
+    if (
+      numberOfGuessedWords.current.toString() === currentClue?.numberOfWords
+    ) {
       socket.emit("playerMove", {
         playerId,
         move: {
@@ -54,7 +59,12 @@ function Board({
   return (
     <div className="board" data-testid="game-board">
       {winner && <p>Thу winner is {winner} team</p>}
-      {currentClue && <p>CLUE - {currentClue.association}, NUMBER OF WORDS - {currentClue.numberOfWords}</p>}
+      {currentClue && (
+        <p>
+          CLUE - {currentClue.association}, NUMBER OF WORDS -{" "}
+          {currentClue.numberOfWords}
+        </p>
+      )}
       <div className="cards-wrapper" data-testid="game-words">
         {words.map((word, wordIndex) => (
           <Card

@@ -27,25 +27,21 @@ function GameInitializer() {
     sessionStorage.getItem(`game:${gameId}`)
   );
 
-  function handleJoinGame(player: Player) {
-    socket.emit("joinGame", { ...player });
-  }
-
   useEffect(() => {
-    function onGameMove(nextGameState: GameState) {
+    function handleGameMove(nextGameState: GameState) {
       setCurrentGameState(nextGameState);
     }
 
-    function onRolesOfWords(roles: Array<string>) {
+    function handleRolesOfWords(roles: Array<string>) {
       setRolesOfWords(roles);
     }
 
-    socket.on("gameMove", onGameMove);
-    socket.on("rolesOfWords", onRolesOfWords);
+    socket.on("gameMove", handleGameMove);
+    socket.on("rolesOfWords", handleRolesOfWords);
 
     return () => {
-      socket.off("gameMove", onGameMove);
-      socket.off("rolesOfWords", onRolesOfWords);
+      socket.off("gameMove", handleGameMove);
+      socket.off("rolesOfWords", handleRolesOfWords);
     };
   }, []);
 

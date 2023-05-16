@@ -1,12 +1,12 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import GameProcess from "./GameProcess";
+import GameInitializer from "./GameInitializer";
 import { Role, Team } from "../../types/Player";
-import {GameMoveType} from "../../types/Move";
-import { describe, test, expect } from 'vitest';
+import { GameMoveType } from "../../types/Move";
+import { describe, test, expect } from "vitest";
 
-describe("<GameProcess />", () => {
+describe("<GameInitializer />", () => {
   const playerId = "player-id";
 
   test("renders start game button when currentGameState is not defined", async () => {
@@ -18,20 +18,12 @@ describe("<GameProcess />", () => {
     };
     const onGameStartMock = vi.fn();
 
-    render(
-      <GameProcess
-        playerId={playerId}
-        player={player}
-        rolesOfWords={[]}
-        onGameStart={onGameStartMock}
-      />
-    );
+    render(<GameInitializer />);
     expect(screen.queryByTestId("game-board")).not.toBeInTheDocument();
 
     const startGameButton = screen.getByTestId("start-game-button");
     await userEvent.click(startGameButton);
     expect(onGameStartMock).toHaveBeenCalledTimes(1);
-
   });
 
   test("renders board when currentGameState is defined", () => {
@@ -43,23 +35,15 @@ describe("<GameProcess />", () => {
     };
     const currentGameState = {
       isStarted: true,
-      words: ['word1', 'word2'],
-      currentBoard: ['none', 'red'],
+      words: ["word1", "word2"],
+      currentBoard: ["none", "red"],
       nextMove: {
         type: GameMoveType.GIVE_CLUE,
-        team: Team.RED
+        team: Team.RED,
       },
     };
 
-    render(
-      <GameProcess
-        playerId={playerId}
-        player={player}
-        rolesOfWords={[]}
-        currentGameState={currentGameState}
-        onGameStart={vi.fn()}
-      />
-    );
+    render(<GameInitializer />);
 
     const gameBoard = screen.getByTestId("game-board");
     expect(gameBoard).toBeInTheDocument();

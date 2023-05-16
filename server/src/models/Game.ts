@@ -17,7 +17,9 @@ class Game {
   constructor() {
     // Here will be logic for creating random set of words and random roles for them
     this.rolesOfWords = ["red", "blue", "black", "neutral", "red"];
-    this.numberOfRedWords = this.rolesOfWords.filter(word => word === 'red').length;
+    this.numberOfRedWords = this.rolesOfWords.filter(
+      (word) => word === "red"
+    ).length;
     this.words = ["Test1", "Test2", "Test3", "Test4", "Test5"];
     this.currentBoard = new Array(5).fill("none");
     this.players = new Map<PlayerId, Player>();
@@ -26,16 +28,12 @@ class Game {
     this.nextMove = { type: "GIVE_CLUE", team: Team.RED };
   }
 
-  private addSpymaster(player: Player) {
+  addSpymaster(player: Player) {
     this.spymasters.set(player.id, player);
   }
 
   addPlayer(player: Player) {
     this.players.set(player.id, player);
-
-    if (player.role === Role.SPYMASTER) {
-      this.addSpymaster(player);
-    }
   }
 
   getPlayer(playerId: PlayerId) {
@@ -52,7 +50,7 @@ class Game {
     switch (playerMove.type) {
       case "GIVE_CLUE":
         this.currentClue = playerMove.clue;
-        this.nextMove = { type: "GUESSING", team: player.team};
+        this.nextMove = { type: "GUESSING", team: player.team };
         break;
       case "END_GUESSING":
         this.currentClue = undefined;
@@ -90,11 +88,19 @@ class Game {
       this.winner = isCurrentTeamRed ? Team.BLUE : Team.RED;
       return;
     }
-    if(isCurrentTeamRed && this.currentBoard.filter(word => word === 'red').length === this.numberOfRedWords) {
+    if (
+      isCurrentTeamRed &&
+      this.currentBoard.filter((word) => word === "red").length ===
+        this.numberOfRedWords
+    ) {
       this.winner = Team.RED;
       return;
     }
-    if(!isCurrentTeamRed && this.currentBoard.filter(word => word === 'blue').length === (this.numberOfRedWords -1)) {
+    if (
+      !isCurrentTeamRed &&
+      this.currentBoard.filter((word) => word === "blue").length ===
+        this.numberOfRedWords - 1
+    ) {
       this.winner = Team.BLUE;
     }
   }
@@ -110,7 +116,8 @@ class Game {
       this.nextMove.team === player.team &&
       (this.nextMove.type === playerMove.type ||
         (this.nextMove.type === "GUESSING" &&
-          (playerMove.type === "END_GUESSING" || playerMove.type === "GUESSING_AND_END_GUESSING")))
+          (playerMove.type === "END_GUESSING" ||
+            playerMove.type === "GUESSING_AND_END_GUESSING")))
     );
   }
 }
