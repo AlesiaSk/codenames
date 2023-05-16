@@ -77,8 +77,16 @@ function GameInitializer() {
     return <JoinGameForm setPlayerId={setPlayerId} />;
   }
 
-  if ((!player.role || !player.team) && !currentGameState) {
-    return <Lobby playerId={playerId} gamePlayers={players} />;
+  if (player && !currentGameState) {
+    return (
+      <Lobby
+        playerId={playerId}
+        gamePlayers={players}
+        onTeamJoined={({ team, role }) => {
+          setPlayer({ ...player, role, team });
+        }}
+      />
+    );
   }
 
   if (player && currentGameState) {

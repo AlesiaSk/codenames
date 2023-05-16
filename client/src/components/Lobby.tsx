@@ -3,14 +3,20 @@ import Player, { Role, Team } from "../types/Player";
 import "../styles/Lobby.scss";
 import { socket } from "../socket";
 
+interface onTeamJoinedParams {
+  team: Team;
+  role: Role;
+}
 interface LobbyProps {
   playerId: string;
   gamePlayers: Array<Player>;
+  onTeamJoined: ({ team, role }: onTeamJoinedParams) => void;
 }
 
-function Lobby({ playerId, gamePlayers }: LobbyProps) {
+function Lobby({ playerId, gamePlayers, onTeamJoined }: LobbyProps) {
   const [players, setPlayers] = useState<Array<Player>>(gamePlayers);
   function handleJoinTeam(team: Team, role: Role) {
+    onTeamJoined({ role, team });
     socket.emit("joinTeam", { playerId, team, role });
   }
 
