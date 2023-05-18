@@ -54,6 +54,7 @@ class Game {
         break;
       case "END_GUESSING":
         this.currentClue = undefined;
+        this.checkWin(player.team);
         this.nextMove = {
           type: "GIVE_CLUE",
           team: player.team === Team.RED ? Team.BLUE : Team.RED,
@@ -62,8 +63,8 @@ class Game {
       case "GUESSING":
         this.currentBoard[playerMove.wordIndex] =
           this.rolesOfWords[playerMove.wordIndex];
-        this.nextMove = { type: "GUESSING", team: player.team };
         this.checkWin(player.team);
+        this.nextMove = { type: "GUESSING", team: player.team };
         break;
       case "GUESSING_AND_END_GUESSING":
         this.currentClue = undefined;
@@ -88,20 +89,31 @@ class Game {
       this.winner = isCurrentTeamRed ? Team.BLUE : Team.RED;
       return;
     }
-    if (
-      isCurrentTeamRed &&
-      this.currentBoard.filter((word) => word === "red").length ===
-        this.numberOfRedWords
-    ) {
+    let numberOfRedWords = 0;
+    let numberOfBlueWords = 0;
+    this.currentBoard.forEach((role) => {
+      if (role === "red") {
+        numberOfRedWords++;
+      }
+      if (role === "blue") {
+        numberOfBlueWords++;
+      }
+    });
+    if (isCurrentTeamRed && numberOfRedWords === this.numberOfRedWords) {
       this.winner = Team.RED;
       return;
     }
-    if (
-      !isCurrentTeamRed &&
-      this.currentBoard.filter((word) => word === "blue").length ===
-        this.numberOfRedWords - 1
-    ) {
+    if (isCurrentTeamRed && numberOfBlueWords === this.numberOfRedWords - 1) {
       this.winner = Team.BLUE;
+      return;
+    }
+    if (!isCurrentTeamRed && numberOfBlueWords === this.numberOfRedWords - 1) {
+      this.winner = Team.BLUE;
+      return;
+    }
+    if (!isCurrentTeamRed && numberOfRedWords === this.numberOfRedWords) {
+      this.winner = Team.RED;
+      return;
     }
   }
 
