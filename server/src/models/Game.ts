@@ -64,7 +64,14 @@ class Game {
         this.currentBoard[playerMove.wordIndex] =
           this.rolesOfWords[playerMove.wordIndex];
         this.checkWin(player.team);
-        this.nextMove = { type: "GUESSING", team: player.team };
+        if (this.rolesOfWords[playerMove.wordIndex] === player.team) {
+          this.nextMove = { type: "GUESSING", team: player.team };
+        } else {
+          this.nextMove = {
+            type: "GIVE_CLUE",
+            team: player.team === Team.RED ? Team.BLUE : Team.RED,
+          };
+        }
         break;
       case "GUESSING_AND_END_GUESSING":
         this.currentClue = undefined;
@@ -101,19 +108,19 @@ class Game {
     });
     if (isCurrentTeamRed && numberOfRedWords === this.numberOfRedWords) {
       this.winner = Team.RED;
-      return;
+      return Team.RED;
     }
     if (isCurrentTeamRed && numberOfBlueWords === this.numberOfRedWords - 1) {
       this.winner = Team.BLUE;
-      return;
+      return Team.BLUE;
     }
     if (!isCurrentTeamRed && numberOfBlueWords === this.numberOfRedWords - 1) {
       this.winner = Team.BLUE;
-      return;
+      return Team.BLUE;
     }
     if (!isCurrentTeamRed && numberOfRedWords === this.numberOfRedWords) {
       this.winner = Team.RED;
-      return;
+      return Team.RED;
     }
   }
 
