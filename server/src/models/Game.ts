@@ -1,6 +1,7 @@
 import Player, { PlayerId, Role, Team } from "./Player";
 import { GameMove, PlayerMove } from "../types/Move";
 import Clue from "../types/Clue";
+import axios, { AxiosResponse } from "axios";
 
 class Game {
   public words: Array<string>;
@@ -16,16 +17,38 @@ class Game {
 
   constructor() {
     // Here will be logic for creating random set of words and random roles for them
-    this.rolesOfWords = ["red", "blue", "black", "neutral", "red"];
+    this.rolesOfWords = this.shuffleRoles(
+      Array(25)
+        .fill("red", 0, 9)
+        .fill("blue", 9, 17)
+        .fill("neutral", 17, 24)
+        .fill("black", 24, 25)
+    );
     this.numberOfRedWords = this.rolesOfWords.filter(
       (word) => word === "red"
     ).length;
-    this.words = ["Test1", "Test2", "Test3", "Test4", "Test5"];
-    this.currentBoard = new Array(5).fill("none");
+
+    this.currentBoard = new Array(25).fill("none");
     this.players = new Map<PlayerId, Player>();
     this.spymasters = new Map<PlayerId, Player>();
     this.isStarted = false;
     this.nextMove = { type: "GIVE_CLUE", team: Team.RED };
+  }
+
+  async generateWords() {
+    this.words = await axios
+      .get<Array<string>>(
+        "https://random-word-api.herokuapp.com/word?number=25"
+      )
+      .then((res) => res.data);
+  }
+
+  shuffleRoles(array: Array<string>) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
   }
 
   addSpymaster(player: Player) {
@@ -64,7 +87,9 @@ class Game {
         this.currentBoard[playerMove.wordIndex] =
           this.rolesOfWords[playerMove.wordIndex];
         this.checkWin(player.team);
-        if (this.rolesOfWords[playerMove.wordIndex] === player.team) {
+        if (
+          this.rolesOfWords[playerMove.wordIndex].toUpperCase() === player.team
+        ) {
           this.nextMove = { type: "GUESSING", team: player.team };
         } else {
           this.nextMove = {

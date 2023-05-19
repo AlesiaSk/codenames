@@ -1,5 +1,5 @@
 import Clue from "./Clue";
-import {Team} from "../models/Player";
+import { Team } from "../models/Player";
 
 export interface GiveClueMove {
   type: "GIVE_CLUE";
@@ -25,4 +25,8 @@ export interface GameMove {
   team: Team;
 }
 
-export type PlayerMove = GiveClueMove | GuessingMove | EndGuessingMove | GuessingAndEndGuessingMove;
+export type PlayerMove =
+  | GiveClueMove
+  | GuessingMove
+  | EndGuessingMove
+  | GuessingAndEndGuessingMove;

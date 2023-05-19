@@ -26,9 +26,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.post("/game", (req: Request, res: Response) => {
+app.post("/game", async (req: Request, res: Response) => {
   const id = uuidv4();
-  gameStore.add(id, new Game());
+  const game = new Game();
+  await game.generateWords();
+  gameStore.add(id, game);
   res.send({
     status: "success",
     id,
