@@ -2,8 +2,6 @@ import React from "react";
 import peep from "/peep.png";
 import "../styles/Home.scss";
 import TypedText from "../elements/TypedText";
-import Player from "../types/Player";
-import { socket } from "../socket";
 import JoinGameForm from "../components/JoinGameForm";
 
 function Home() {
